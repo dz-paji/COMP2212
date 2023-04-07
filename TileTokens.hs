@@ -15371,13 +15371,13 @@ data Token =
   TokenDiv AlexPosn        |
   TokenExp AlexPosn        |
   TokenLeftParen AlexPosn  |
-  TokenRightParen AlexPosn |
+  TokenRightParen AlexPosn 
   deriving (Eq,Show) 
 
-tokenPosn :: TileTokens -> String
+tokenPosn :: Token -> String
 tokenPosn (TokenInt  (AlexPn a l c) n) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenTrue  (AlexPn a l c) n) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenFalse  (AlexPn a l c) n) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenTrue  (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenFalse  (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenVar  (AlexPn a l c) x) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenIf (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenThen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
@@ -15403,8 +15403,8 @@ tokenPosn (TokenMinus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTimes (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenDiv (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenExp (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenLParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenRParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLeftParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenRightParen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 alex_action_2 = tok(\p s -> TokenInt p (read s))
 alex_action_3 = tok (\p s -> TokenTrue p)
 alex_action_4 = tok (\p s -> TokenFalse p)
