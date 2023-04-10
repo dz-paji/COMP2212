@@ -18,8 +18,8 @@ $white+       ;
   if           { tok(\p s -> TokenIf p) }
   then          { tok(\p s -> TokenThen p) }
   else            { tok(\p s -> TokenElse p) }
+  let            { tok(\p s -> TokenLet p) }
   for            { tok (\p s -> TokenFor p) }
-  while            { tok (\p s -> TokenWhile p) }
   REVERSE         { tok(\p s -> TokenReverse p) }
   ROTATE           { tok (\p s -> TokenRotate p) }
   BLANK           { tok (\p s -> TokenBlank p) }
@@ -33,7 +33,10 @@ $white+       ;
   \&\&             { tok (\p s -> TokenAnd p) }
   \|\|             { tok(\p s -> TokenOr p) }
   \!\!             { tok (\p s -> TokenNegation p) }
-  \=            { tok(\p s -> TokenEq p) }
+  \<            { tok(\p s -> TokenLess p) }
+  \>            { tok(\p s -> TokenGreater p) }
+  \=               { tok(\p s -> TokenAssign p) }
+  \=\=            { tok(\p s -> TokenEq p) }
   \+            { tok(\p s -> TokenPlus p) }
   \-            { tok(\p s -> TokenMinus p) }
   \*            { tok(\p s -> TokenTimes p) }
@@ -56,8 +59,8 @@ data Token =
   TokenIf AlexPosn         |
   TokenThen AlexPosn       |
   TokenElse AlexPosn       |
+  TokenLet AlexPosn        |
   TokenFor AlexPosn        |
-  TokenWhile AlexPosn      |
   TokenPlusOne AlexPosn    |
   TokenMinusOne AlexPosn   |
   TokenReverse AlexPosn    |
@@ -71,6 +74,9 @@ data Token =
   TokenAnd AlexPosn        |
   TokenOr AlexPosn         |
   TokenNegation AlexPosn   |
+  TokenLess AlexPosn   |
+  TokenGreater AlexPosn   |
+  TokenAssign AlexPosn   |
   TokenEq  AlexPosn        |
   TokenPlus AlexPosn       |
   TokenMinus AlexPosn      |
@@ -89,8 +95,8 @@ tokenPosn (TokenVar  (AlexPn a l c) x) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenIf (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenThen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenElse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLet (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenFor (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenWhile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenReverse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenRotate (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenBlank (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
@@ -104,6 +110,9 @@ tokenPosn (TokenMinusOne (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenNegation (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenLess (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenGreater (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenAssign (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenEq  (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPlus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenMinus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
