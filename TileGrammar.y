@@ -15,8 +15,7 @@ import TileTokens
     if              { TokenIf }
     then            { TokenThen }
     else            { TokenElse }
-    for             { TokenFor }
-    while           { TokenWhile }
+    let             { TokenLet }
     REVERSE         { TokenReverse }
     ROTATE          { TokenRotate } 
     BLANK           { TokenBlank }
@@ -24,6 +23,7 @@ import TileTokens
     SCALE           { TokenScale }
     PRINT           { TokenPrint }
     CREATECANVAS    { TokenCreateCanvas }
+    PRINTCANVAS     { TokenPrintCanvas }
     SUBTITLE        { TokenSubtitle }
     '++'            { TokenPlusOne }
     '--'            { TokenMinusOne }
@@ -32,7 +32,8 @@ import TileTokens
     '!!'            { TokenNegation } 
     '<'             { TokenLess } 
     '>'             { TokenGreater } 
-    '=='             { TokenEq }
+    '=='            { TokenEq }
+    '='             { TokenAssign }
     '+'             { TokenPlus }
     '-'             { TokenMinus }    
     '*'             { TokenTimes }
@@ -51,12 +52,13 @@ import TileTokens
 Exp : CREATECANVAS var Calc {CreateCanvas $2 $3}
     | LOAD var          {Load $2}
     | REVERSE var       {Reverse $2}
-    | ROTATE var Calc    {Rotate $2 $3}
+    | ROTATE var Calc   {Rotate $2 $3}
     | BLANK  var        {Blank $2}
-    | SCALE var Calc     {Scale $2 $3}
-    | PRINT var (Calc,Calc)    {Print var}
+    | SCALE var Calc    {Scale $2 $3}
+    | PRINT var (Calc,Calc)      {Print var}
     | SUBTITLE var var  {Subtitle $2 $3}
-    | if Bool then Exp else Exp    { If $2 $4 $6 } 
+    | let var '=' Calc  {Assign $2 $4}
+    | if Bool then Exp else Exp  {If $2 $4 $6} 
 
 -- Calculation
 Calc : Calc '^' Calc  {Expo $1 $3}
@@ -82,16 +84,6 @@ Bool : Bool '&&' Bool  {And $1 $3}
      | '(' Bool ')'    {Paren $2}
 
 
-
--- Loop
--- ForLoop : for var int Bool Calc   {For $2 $3 $4 $5} 
-
--- WhileLoop : while Bool
-
-
-
-
-
 { 
 parseError :: [TileToken] -> a
 parseError [] = error "Unknown Parse Error" 
@@ -108,7 +100,9 @@ data Exp
     Scale Var Calc  |    
     Print Var Calc Calc | 
     Subtitle Var Var  |  
-    If Bool Exp Exp  deriving (Show,Eq)
+    If Bool Exp Exp  |
+    Let Var Calc
+    deriving (Show,Eq)
 
 data Calc
     = Expo Int |
@@ -120,7 +114,8 @@ data Calc
     PlusOne Int |
     Int |
     Get Var |
-    Paren Calc  deriving (Show,Eq)
+    Paren Calc  
+    deriving (Show,Eq)
 
 data Bool 
     = And Bool Bool |
@@ -130,6 +125,7 @@ data Bool
     IsGreater Calc Calc |
     IsEq Calc Calc |
     True |
-    False  deriving (Show,Eq)
+    False  
+    deriving (Show,Eq)
 
 } 
