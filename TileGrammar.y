@@ -62,6 +62,7 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | SUBTITLE var var  {Subtitle $2 $3}
     | let var '=' ExpCalc  {Assign $2 $4}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
+    | Exp Exp    {StatementSep $1 $2}
 
 
 -- Calculation of number
@@ -91,7 +92,7 @@ parseError :: [TileTokens] -> a
 parseError [] = error "Unknown Parse Error" 
 parseError (t:ts) = error ("Parse error at line:column " ++ (tokenPosn t))
 
-data Type  = TileInt Int | TileVar String | TileTrue | TileFalse deriving (Show,Eq)
+--data TileType  = TileInt Int | TileVar String | TileCommand deriving (Show,Eq)
 
 data Exp
     = CreateCanvas TileVar ExpCalc |
@@ -101,10 +102,10 @@ data Exp
     Blank TileVar  |       
     Scale TileVar ExpCalc  |    
     Print TileVar ExpCalc ExpCalc | 
-    Subtitle TileVar TileVar  | 
-    IfThen ExpBool Exp  | 
+    Subtitle TileVar TileVar  |  
     IfElse ExpBool Exp Exp  |
-    Let TileVar ExpCalc
+    Let TileVar ExpCalc  |
+    StatementSep Exp Exp  
     deriving (Show,Eq)
 
 data ExpCalc
