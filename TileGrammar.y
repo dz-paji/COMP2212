@@ -117,7 +117,7 @@ data ExpCalc
     MinusOne TileInt |
     PlusOne TileInt |
     Int TileInt |
-    Get TileVar |
+    Get TileVar 
     deriving (Show,Eq)
 
 data ExpBool 
