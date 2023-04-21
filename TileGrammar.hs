@@ -738,7 +738,7 @@ parseError :: [TileTokens] -> a
 parseError [] = error "Unknown Parse Error" 
 parseError (t:ts) = error ("Parse error at line:column " ++ (tokenPosn t))
 
---data TileType  = TileInt Int | TileVar String | TileCommand deriving (Show,Eq)
+data TileType  = TileInt Int | TileVar String | TileCommand deriving (Show,Eq)
 
 data Exp
     = CreateCanvas TileVar ExpCalc |
