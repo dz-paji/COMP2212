@@ -37,14 +37,17 @@ import TileTokens
     '*'             { TokenTimes _ }
     '/'             { TokenDiv _ }
     '^'             { TokenExp _ }
+    ';'             { TokenStatSep _ }
     '('             { TokenLeftParen _ }    
     ')'             { TokenRightParen _ }    
 
 %nonassoc int true false var 
+%nonassoc if then else
 %nonassoc '(' 
 %nonassoc ')'
 %nonassoc '<' '>' '=='
 %nonassoc '!!'
+%left ';'
 %left '+' '-'
 %left '*' '/' '^'
 %left '&&' '||'
@@ -61,8 +64,9 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | PRINT var      {Print var}
     | SUBTITLE var var  {Subtitle $2 $3}
     | let var '=' ExpCalc  {Assign $2 $4}
+    | Exp ';' Exp    {StatementSep $1 $2}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
-    | Exp Exp    {StatementSep $1 $2}
+
 
 
 -- Calculation of number
