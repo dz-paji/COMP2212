@@ -16,6 +16,8 @@ import TileTokens
     then            { TokenThen _ }
     else            { TokenElse _ }
     let             { TokenLet _ }
+    while           { TokenWhile _ }
+    do              { TokenDo _ }
     REVERSE         { TokenReverse _ }
     ROTATE          { TokenRotate _ } 
     BLANK           { TokenBlank _ }
@@ -66,6 +68,7 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | SUBTITLE var var  {Subtitle $2 $3}
     | let var '=' ExpCalc  {Assign $2 $4}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
+    | do Exp while ExpBool    {While $2 $4}
     | Exp ';' Exp    {StatSeq $1 $3}
     | Exp ';'        {StatSemi $1 }
 
@@ -110,7 +113,7 @@ data Exp
     Subtitle String String  |
     OutFile String   |
     IfElse ExpBool Exp Exp  |
-    Let String ExpCalc  |
+    While Exp ExpBool  |
     Assign String ExpCalc  |
     StatSeq Exp Exp  |
     StatSemi Exp
