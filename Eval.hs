@@ -4,16 +4,16 @@ module Eval where import TileGrammar
 -- TODO: standardize the return type of evalExp
 evalExp expr = case expr of
     (CreateCanvas var calc_expr) -> n
-    (Load TileVar var) -> (var, var)
-    (Reverse TileVar var) -> reverse var
-    (Rotate TileVar var calc_expr) -> rotateTile var calc_expr
-    (Blank TileVar var) -> (var, []) -- 这又是干啥的来着
-    (Scale TileVar var calc_expr) -> scaleTile var calc_expr
-    (Print TileVar var calc_expr calc_expr) -> var -- 这是干啥的来着
-    (Subtitle TileVar var TileVar var) -> var -- 这是干啥的来着
+    (Load var) -> (var, var)
+    (Reverse var) -> reverse var
+    (Rotate var calc_expr) -> rotateTile var calc_expr
+    (Blank var) -> (var, []) -- 这又是干啥的来着
+    (Scale var calc_expr) -> scaleTile var calc_expr
+    (Print var calc_expr calc_expr) -> var -- 这是干啥的来着
+    (Subtitle var_a var_b) -> var -- 这是干啥的来着
     (IfThen bool_expr then_expr) -> evalIfThen (evalBoolExpr bool_expr) then_expr
     (IfElse bool_expr then_expr else_expr) -> evalIfElse (evalBoolExpr bool_expr) then_expr else_expr
-    (Let TileVar var calc_expr) -> var
+    (Let var calc_expr) -> var
 
 -- TODO: implement rotateTile
 rotateTile :: Exp -> CalcExpr -> Tile
@@ -37,15 +37,17 @@ evalBoolExpr (Or expr_a expr_b) = evalBoolExpr expr_a || evalBoolExpr expr_b
 evalBoolExpr (Negation expr) = not $ evalBoolExpr expr
 evalBoolExpr (IsLess expr_a expr_b) = evalBoolExpr expr_a < evalBoolExpr expr_b
 evalBoolExpr (IsGreater expr_a expr_b) = evalBoolExpr expr_a > evalBoolExpr expr_b
-evalBoolExpr True = True
-evalBoolExpr False = False
+evalBoolExpr TileTrue = True
+evalBoolExpr TileFalse = False
 
 evalCalc :: CalcExpr -> TileInt
 evalCalc expr = case expr of
-    (Expo TileInt this) -> ^ this
-    (Times TileInt a b) -> TileInt (a * b)
-    (Div TileInt a TileInt b) -> TileInt (a / b)
-    (Minus TileInt a TileInt b) -> TileInt (a - b)
-    (Plus TileInt a TileInt b) -> TileInt (a + b)
-    (MinusOne TileInt a) -> TileInt (a - 1)
-    (PlusOne TileInt a) -> TileInt (a + 1)
+    (Expo base exponent) -> (base ^ this)
+    (Times a b) -> (a * b)
+    (Div a  b) -> (a / b)
+    (Minus a b) -> (a - b)
+    (Plus a b) -> (a + b)
+    (MinusOne a) -> (a - 1)
+    (PlusOne a) -> (a + 1)
+    (Int a) -> a
+    (Get a) -> (show a)
