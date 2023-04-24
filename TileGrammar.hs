@@ -614,18 +614,16 @@ happyReduction_25 _
 	)
 
 happyReduce_26 = happySpecReduce_1  6 happyReduction_26
-happyReduction_26 (HappyTerminal happy_var_1)
+happyReduction_26 _
 	 =  HappyAbsSyn6
-		 (True happy_var_1
+		 (TileTrue
 	)
-happyReduction_26 _  = notHappyAtAll 
 
 happyReduce_27 = happySpecReduce_1  6 happyReduction_27
-happyReduction_27 (HappyTerminal happy_var_1)
+happyReduction_27 _
 	 =  HappyAbsSyn6
-		 (False happy_var_1
+		 (TileFalse
 	)
-happyReduction_27 _  = notHappyAtAll 
 
 happyReduce_28 = happySpecReduce_3  6 happyReduction_28
 happyReduction_28 _
@@ -712,32 +710,30 @@ parseError :: [TileTokens] -> a
 parseError [] = error "Unknown Parse Error" 
 parseError (t:ts) = error ("Parse error at line:column " ++ (tokenPosn t))
 
-data TileType  = TileInt Int | TileVar String | TileCommand deriving (Show,Eq)
-
 data Exp
-    = CreateCanvas TileVar ExpCalc |
-    Load TileVar |
-    Reverse TileVar |
-    Rotate TileVar ExpCalc |
-    Blank TileVar  |       
-    Scale TileVar ExpCalc  |    
-    Print TileVar ExpCalc ExpCalc | 
-    Subtitle TileVar TileVar  |  
+    = CreateCanvas String ExpCalc |
+    Load String |
+    Reverse String |
+    Rotate String ExpCalc |
+    Blank String  |       
+    Scale String ExpCalc  |    
+    Print String ExpCalc ExpCalc | 
+    Subtitle String String  |  
     IfElse ExpBool Exp Exp  |
-    Let TileVar ExpCalc  |
+    Let String ExpCalc  |
     StatementSep Exp Exp  
     deriving (Show,Eq)
 
 data ExpCalc
-    = Expo TileInt TileInt |
-    Times TileInt TileInt |
-    Div TileInt TileInt |
-    Minus TileInt TileInt |
-    Plus TileInt TileInt |
-    MinusOne TileInt |
-    PlusOne TileInt |
-    Int TileInt |
-    Get TileVar 
+    = Expo Int Int |
+    Times Int Int |
+    Div Int Int |
+    Minus Int Int |
+    Plus Int Int |
+    MinusOne Int |
+    PlusOne Int |
+    Int Int |
+    Get String 
     deriving (Show,Eq)
 
 data ExpBool 
@@ -747,8 +743,8 @@ data ExpBool
     IsLess ExpCalc ExpCalc |
     IsGreater ExpCalc ExpCalc |
     IsEq ExpCalc ExpCalc |
-    True |
-    False  
+    TileTrue |
+    TileFalse  
     deriving (Show,Eq)
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
