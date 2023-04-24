@@ -4,7 +4,7 @@ import TileTokens
 }
 
 %name parseCalc 
-%tokentype { TileTokens } 
+%tokentype { Token } 
 %error { parseError }
 
 %token 
@@ -23,7 +23,7 @@ import TileTokens
     SCALE           { TokenScale _ }
     PRINT           { TokenPrint _ }
     CREATECANVAS    { TokenCreateCanvas _ }
-    --PRINTCANVAS     { TokenPrintCanvas _ }
+    OUTFILE         { TokenOutFile _ }
     SUBTITLE        { TokenSubtitle _ }
     '&&'            { TokenAnd _ }
     '||'            { TokenOr _ }
@@ -61,12 +61,13 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | ROTATE var ExpCalc   {Rotate $2 $3}
     | BLANK  var        {Blank $2}
     | SCALE var ExpCalc    {Scale $2 $3}
-    | PRINT var      {Print var}
+    | PRINT var ExpCalc ExpCalc    {Print $2 $3 $4}
+    | OUTFILE  var      {OutFile $2}
     | SUBTITLE var var  {Subtitle $2 $3}
     | let var '=' ExpCalc  {Assign $2 $4}
-    | Exp ';' Exp    {StatementSep $1 $2}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
-
+    | Exp ';' Exp    {StatSeq $1 $3}
+    | Exp ';'        {StatSemi $1 }
 
 
 -- Calculation of number
@@ -75,7 +76,7 @@ ExpCalc : ExpCalc '^' ExpCalc  {Expo $1 $3}
      | ExpCalc '/' ExpCalc  {Div $1 $3}
      | ExpCalc '+' ExpCalc   {Plus $1 $3}
      | ExpCalc '-' ExpCalc   {Minus $1 $3}
-     | int   {Int $1}
+     | int   {TileInt $1}
      | var   {Get $1}
      | '(' ExpCalc ')'   {$2}
 
@@ -84,41 +85,44 @@ ExpBool : ExpBool '&&' ExpBool  {And $1 $3}
      | ExpBool '||' ExpBool  {Or $1 $3}
      | '!!' ExpBool       {Negation $2}
      | ExpCalc '<' ExpCalc   {IsLess $1 $3}
+     | ExpCalc '<' '=' ExpCalc   {IsLessEq $1 $4}
      | ExpCalc '>' ExpCalc   {IsGreater $1 $3}
-     | ExpCalc '==' ExpCalc  {IsEq}
+     | ExpCalc '>' '=' ExpCalc   {IsGreaterEq $1 $4}
+     | ExpCalc '==' ExpCalc  {IsEq $1 $3}
      | true     {TileTrue }
      | false    {TileFalse }
      | '(' ExpBool ')'    {$2}
 
 
 { 
-parseError :: [TileTokens] -> a
+parseError :: [Token] -> a
 parseError [] = error "Unknown Parse Error" 
 parseError (t:ts) = error ("Parse error at line:column " ++ (tokenPosn t))
 
 data Exp
     = CreateCanvas String ExpCalc |
-    Load String |
-    Reverse String |
+    Load String  |
+    Reverse String  |
     Rotate String ExpCalc |
     Blank String  |       
     Scale String ExpCalc  |    
-    Print String ExpCalc ExpCalc | 
-    Subtitle String String  |  
+    Print String ExpCalc ExpCalc  | 
+    Subtitle String String  |
+    OutFile String   |
     IfElse ExpBool Exp Exp  |
     Let String ExpCalc  |
-    StatementSep Exp Exp  
+    Assign String ExpCalc  |
+    StatSeq Exp Exp  |
+    StatSemi Exp
     deriving (Show,Eq)
 
 data ExpCalc
-    = Expo Int Int |
-    Times Int Int |
-    Div Int Int |
-    Minus Int Int |
-    Plus Int Int |
-    MinusOne Int |
-    PlusOne Int |
-    Int Int |
+    = Expo ExpCalc ExpCalc |
+    Times ExpCalc ExpCalc |
+    Div ExpCalc ExpCalc |
+    Minus ExpCalc ExpCalc |
+    Plus ExpCalc ExpCalc |
+    TileInt Int |
     Get String 
     deriving (Show,Eq)
 
@@ -127,7 +131,9 @@ data ExpBool
     Or ExpBool ExpBool |
     Negation ExpBool |
     IsLess ExpCalc ExpCalc |
+    IsLessEq ExpCalc ExpCalc |
     IsGreater ExpCalc ExpCalc |
+    IsGreaterEq ExpCalc ExpCalc |
     IsEq ExpCalc ExpCalc |
     TileTrue |
     TileFalse  

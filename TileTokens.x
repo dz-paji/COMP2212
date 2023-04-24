@@ -36,6 +36,7 @@ $white+       ;
   \<            { tok(\p s -> TokenLess p) }
   \>            { tok(\p s -> TokenGreater p) }
   \=               { tok(\p s -> TokenAssign p) }
+  \;               { tok(\p s -> TokenStatSep p) }
   \=\=            { tok(\p s -> TokenEq p) }
   \+            { tok(\p s -> TokenPlus p) }
   \-            { tok(\p s -> TokenMinus p) }
@@ -70,13 +71,15 @@ data Token =
   TokenScale AlexPosn      |
   TokenPrint AlexPosn      |
   TokenCreateCanvas AlexPosn |
+  TokenOutFile AlexPosn    |
   TokenSubtitle AlexPosn   |
   TokenAnd AlexPosn        |
   TokenOr AlexPosn         |
   TokenNegation AlexPosn   |
-  TokenLess AlexPosn   |
-  TokenGreater AlexPosn   |
-  TokenAssign AlexPosn   |
+  TokenLess AlexPosn       |
+  TokenGreater AlexPosn    |
+  TokenAssign AlexPosn     |
+  TokenStatSep AlexPosn    |
   TokenEq  AlexPosn        |
   TokenPlus AlexPosn       |
   TokenMinus AlexPosn      |
@@ -102,6 +105,7 @@ tokenPosn (TokenRotate (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenBlank (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLoad (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenCreateCanvas (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenOutFile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenScale (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenSubtitle (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPrint (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
@@ -113,6 +117,7 @@ tokenPosn (TokenNegation (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLess (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGreater (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenAssign (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenStatSep (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenEq  (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPlus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenMinus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
