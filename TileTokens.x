@@ -20,6 +20,7 @@ $white+       ;
   else            { tok(\p s -> TokenElse p) }
   let            { tok(\p s -> TokenLet p) }
   while           { tok (\p s -> TokenWhile p) }
+  for           { tok (\p s -> TokenFor p) }
   do              { tok (\p s -> TokenDo p) }
   REVERSE         { tok(\p s -> TokenReverse p) }
   ROTATE           { tok (\p s -> TokenRotate p) }
@@ -66,6 +67,7 @@ data Token =
   TokenElse AlexPosn       |
   TokenLet AlexPosn        |
   TokenWhile AlexPosn      |
+  TokenFor AlexPosn        |
   TokenDo AlexPosn         |
   TokenPlusOne AlexPosn    |
   TokenMinusOne AlexPosn   |
@@ -108,6 +110,7 @@ tokenPosn (TokenThen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenElse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLet (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenWhile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenFor (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenDo (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenReverse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenRotate (AlexPn a l c)) = show(l) ++ ":" ++ show(c)

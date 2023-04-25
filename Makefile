@@ -22,13 +22,13 @@ Tsl: $(DEPEND) Tsl.hs
 TileGrammar.hs : TileGrammar.y
 	@rm -f TileGrammar.hs
 	happy TileGrammar.y
-	@chmod -w TileGrammar.hs
+	@chmod 755 TileGrammar.hs
 
 # Generate ML files from a lexer definition file
 TileTokens.hs : TileTokens.x
 	@rm -f TileTokens.hs
 	alex TileTokens.x
-	@chmod -w TileTokens.hs
+	@chmod 755 TileTokens.hs
 
 # Clean up the directory
 clean::
