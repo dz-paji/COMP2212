@@ -1,0 +1,14 @@
+input: tile1
+
+-- 通过X轴reflect，通过Y轴reflect，通过XY轴reflection
+reversedTileX =reflectX tile1
+reversedTileY = reflectX tile1
+reversedTileXY = reflectXY tile1
+
+--结合这几个tile成为一个baseTile
+baseTile = Combine tile1 reversedTileX BLANK
+                   BLANK reversedTileY reversedTileXY
+
+--横向复制baseTile，然后纵向复制新的Tile
+copyBaseTileX = baseTile*10 --横向复制10次
+copyBaseTileY = baseTile*30 --纵向复制30次

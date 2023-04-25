@@ -15,15 +15,19 @@ import TileTokens
     if              { TokenIf _ }
     then            { TokenThen _ }
     else            { TokenElse _ }
+    new             { TokenNew _ }
     let             { TokenLet _ }
     while           { TokenWhile _ }
     for             { TokenFor _ }
     do              { TokenDo _ }
     REVERSE         { TokenReverse _ }
-    ROTATE          { TokenRotate _ } 
+    ROTATE          { TokenRotate _ }
+    REFLECTX        { TokenReflectX _ }
+    REFLECTY        { TokenReflectY _ }
     BLANK           { TokenBlank _ }
     LOAD            { TokenLoad _ }
     SCALE           { TokenScale _ }
+    TILECOMB        {TokenTileComb _ }
     TILEAND         { TokenTileAnd _ }
     TILEOR          { TokenTileOr _ }
     PRINT           { TokenPrint _ }
@@ -63,15 +67,19 @@ import TileTokens
 
 Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | LOAD var          {Load $2}
-    | REVERSE var       {Reverse $2}
+    | REVERSE var      {Reverse $2}
     | ROTATE var ExpCalc   {Rotate $2 $3}
+    | REFLECTX var      {ReflectX $2}
+    | REFLECTY var      {ReflectY $2}
     | BLANK  var        {Blank $2}
     | SCALE var ExpCalc    {Scale $2 $3}
     | PRINT var ExpCalc ExpCalc    {Print $2 $3 $4}
     | OUTFILE  var      {OutFile $2}
     | TILEAND  var var  {TileAnd $2 $3}
     | TILEOR var var    {TileOr $2 $3}
+    | TILECOMB var var var  {TileComb $2 $3 $4}
     | SUBTITLE var '('ExpCalc ',' ExpCalc ')' ExpCalc  {Subtitle $2 $4 $6 $8}
+    | new var '=' Exp   {NewTile $2 $4}
     | let var '=' ExpCalc  {Assign $2 $4}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
     | do Exp while '(' ExpBool ')'    {While $2 $5}
@@ -114,30 +122,31 @@ data StringType = String String | VarName String | TileName String
 
 type TileName = String 
 type VarName = String
--- type CEK = (Exp, Env, Kont)
--- type Env = [(String, TileInt)]
--- type Frame = Exp [-] | [-] Exp
--- type Kont = [Frame]
+type Env = [(String, Int)]
 
 data Exp
     = CreateCanvas TileName ExpCalc |
     Load String  |
-    Reverse TileName  |
+    Reverse TileName String |
     Rotate TileName ExpCalc |
+    ReflectX TileName  |
+    ReflectY TileName  |
     Blank TileName  |       
     Scale TileName ExpCalc  |    
     Print TileName ExpCalc ExpCalc  | 
     Subtitle TileName ExpCalc ExpCalc ExpCalc  |
-    OutFile String   |
+    OutFile TileName  |
+    TileComb TileName TileName String |
     TileAnd TileName TileName |
     TileOr TileName TileName |
     IfElse ExpBool Exp Exp  |
     While Exp ExpBool  |
     For Exp VarName ExpBool Exp |
+    NewTile TileName Exp  |
     Assign VarName ExpCalc  |
     StatSeq Exp Exp  |
-    StatSemi Exp
-    -- Cl VarName Exp Env
+    StatSemi Exp |
+    Cl VarName Env
     deriving (Show,Eq)
 
 data ExpCalc

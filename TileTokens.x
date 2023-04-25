@@ -18,12 +18,15 @@ $white+       ;
   if           { tok(\p s -> TokenIf p) }
   then          { tok(\p s -> TokenThen p) }
   else            { tok(\p s -> TokenElse p) }
-  let            { tok(\p s -> TokenLet p) }
+  new             { tok (\p s -> TokenNew p) }
+  let             { tok(\p s -> TokenLet p) }
   while           { tok (\p s -> TokenWhile p) }
   for           { tok (\p s -> TokenFor p) }
   do              { tok (\p s -> TokenDo p) }
   REVERSE         { tok(\p s -> TokenReverse p) }
   ROTATE           { tok (\p s -> TokenRotate p) }
+  REFLECTX        { tok (\p s -> TokenReflectX p) }
+  REFLECTY        { tok (\p s -> TokenReflectY p) }
   BLANK           { tok (\p s -> TokenBlank p) }
   LOAD            { tok (\p s -> TokenLoad p) }
   TILEAND         { tok (\p s -> TokenTileAnd p) }
@@ -65,6 +68,7 @@ data Token =
   TokenIf AlexPosn         |
   TokenThen AlexPosn       |
   TokenElse AlexPosn       |
+  TokenNew AlexPosn        | 
   TokenLet AlexPosn        |
   TokenWhile AlexPosn      |
   TokenFor AlexPosn        |
@@ -73,6 +77,8 @@ data Token =
   TokenMinusOne AlexPosn   |
   TokenReverse AlexPosn    |
   TokenRotate   AlexPosn   |
+  TokenReflectX  AlexPosn  |
+  TokenReflectY  AlexPosn  |
   TokenBlank AlexPosn      |
   TokenLoad AlexPosn       |
   TokenScale AlexPosn      |
@@ -108,12 +114,15 @@ tokenPosn (TokenVar  (AlexPn a l c) x) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenIf (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenThen (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenElse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenNew (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLet (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenWhile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenFor (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenDo (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenReverse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenRotate (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenReflectX (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenReflectY (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenBlank (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLoad (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenCreateCanvas (AlexPn a l c)) = show(l) ++ ":" ++ show(c)

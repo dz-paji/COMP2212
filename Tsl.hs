@@ -1,5 +1,6 @@
 import TileTokens
 import TileGrammar
+import Eval
 import System.Environment
 import Control.Exception
 import System.IO
@@ -13,6 +14,8 @@ main' = do (fileName : _ ) <- getArgs
            putStrLn ("Parsing : " ++ source)
            let parsed = parseCalc (alexScanTokens source)
            putStrLn ("Parsed as " ++ (show parsed))
+           --let result = letsEval (parsed)
+           --putStrLn ("Result is " ++ (show result))
 
 noParse :: ErrorCall -> IO ()
 noParse e = do let err =  show e
