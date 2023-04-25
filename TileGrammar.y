@@ -25,6 +25,7 @@ import TileTokens
     REFLECTX        { TokenReflectX _ }
     REFLECTY        { TokenReflectY _ }
     BLANK           { TokenBlank _ }
+    CLONE           { TokenClone _ }
     LOAD            { TokenLoad _ }
     SCALE           { TokenScale _ }
     TILECOMB        {TokenTileComb _ }
@@ -72,6 +73,7 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | REFLECTX var      {ReflectX $2}
     | REFLECTY var      {ReflectY $2}
     | BLANK  var        {Blank $2}
+    | CLONE var var     {Clone $2 $3}
     | SCALE var ExpCalc    {Scale $2 $3}
     | PRINT var ExpCalc ExpCalc    {Print $2 $3 $4}
     | OUTFILE  var      {OutFile $2}
@@ -79,7 +81,7 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | TILEOR var var    {TileOr $2 $3}
     | TILECOMB var var var  {TileComb $2 $3 $4}
     | SUBTITLE var '('ExpCalc ',' ExpCalc ')' ExpCalc  {Subtitle $2 $4 $6 $8}
-    | new var '=' Exp   {NewTile $2 $4}
+    | new var    {NewTile $2 $4}
     | let var '=' ExpCalc  {Assign $2 $4}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
     | do Exp while '(' ExpBool ')'    {While $2 $5}
@@ -125,25 +127,26 @@ type VarName = String
 type Env = [(String, Int)]
 
 data Exp
-    = CreateCanvas TileName ExpCalc |
+    = Assign VarName ExpCalc  |
+    Blank TileName  |
+    CreateCanvas TileName ExpCalc |
+    Clone  TileName TileName  |
+    For Exp VarName ExpBool Exp |
+    IfElse ExpBool Exp Exp  |
     Load String  |
+    NewTile TileName Exp  |
+    OutFile TileName  |
+    Print TileName ExpCalc ExpCalc  | 
     Reverse TileName String |
     Rotate TileName ExpCalc |
     ReflectX TileName  |
-    ReflectY TileName  |
-    Blank TileName  |       
+    ReflectY TileName  |      
     Scale TileName ExpCalc  |    
-    Print TileName ExpCalc ExpCalc  | 
-    Subtitle TileName ExpCalc ExpCalc ExpCalc  |
-    OutFile TileName  |
+    Subtitle TileName ExpCalc ExpCalc ExpCalc  |  
     TileComb TileName TileName String |
     TileAnd TileName TileName |
     TileOr TileName TileName |
-    IfElse ExpBool Exp Exp  |
-    While Exp ExpBool  |
-    For Exp VarName ExpBool Exp |
-    NewTile TileName Exp  |
-    Assign VarName ExpCalc  |
+    While Exp ExpBool  | 
     StatSeq Exp Exp  |
     StatSemi Exp |
     Cl VarName Env
