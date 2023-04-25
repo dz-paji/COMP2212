@@ -76,7 +76,8 @@ data Token =
   TokenPlusOne AlexPosn    |
   TokenMinusOne AlexPosn   |
   TokenReverse AlexPosn    |
-  TokenRotate   AlexPosn   |
+  TokenRotate  AlexPosn    |
+  TokenClone  AlexPosn     |
   TokenReflectX  AlexPosn  |
   TokenReflectY  AlexPosn  |
   TokenBlank AlexPosn      |
@@ -118,6 +119,7 @@ tokenPosn (TokenNew (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLet (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenWhile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenFor (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenClone (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenDo (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenReverse (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenRotate (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
