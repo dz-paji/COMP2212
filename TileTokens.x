@@ -25,6 +25,8 @@ $white+       ;
   ROTATE           { tok (\p s -> TokenRotate p) }
   BLANK           { tok (\p s -> TokenBlank p) }
   LOAD            { tok (\p s -> TokenLoad p) }
+  TILEAND         { tok (\p s -> TokenTileAnd p) }
+  TIlEOR          { tok (\p s -> TokenTileOr p) }
   SCALE           { tok (\p s -> TokenScale p) }
   PRINT             { tok (\p s -> TokenPrint p) }
   CREATECANVAS      { tok (\p s -> TokenCreateCanvas p) }
@@ -38,6 +40,7 @@ $white+       ;
   \>            { tok(\p s -> TokenGreater p) }
   \=               { tok(\p s -> TokenAssign p) }
   \;               { tok(\p s -> TokenStatSep p) }
+  \,                { tok(\p s -> TokenComma p) }
   \=\=            { tok(\p s -> TokenEq p) }
   \+            { tok(\p s -> TokenPlus p) }
   \-            { tok(\p s -> TokenMinus p) }
@@ -72,6 +75,8 @@ data Token =
   TokenLoad AlexPosn       |
   TokenScale AlexPosn      |
   TokenPrint AlexPosn      |
+  TokenTileAnd  AlexPosn   |
+  TokenTileOr  AlexPosn    |
   TokenCreateCanvas AlexPosn |
   TokenOutFile AlexPosn    |
   TokenSubtitle AlexPosn   |
@@ -81,6 +86,7 @@ data Token =
   TokenLess AlexPosn       |
   TokenGreater AlexPosn    |
   TokenAssign AlexPosn     |
+  TokenComma AlexPosn      |
   TokenStatSep AlexPosn    |
   TokenEq  AlexPosn        |
   TokenPlus AlexPosn       |
@@ -110,6 +116,8 @@ tokenPosn (TokenLoad (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenCreateCanvas (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenOutFile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenScale (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenTileAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenTileOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenSubtitle (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPrint (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPlusOne (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
@@ -120,6 +128,7 @@ tokenPosn (TokenNegation (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenLess (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenGreater (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenAssign (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenComma (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenStatSep (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenEq  (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPlus (AlexPn a l c)) = show(l) ++ ":" ++ show(c)

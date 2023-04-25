@@ -41,6 +41,7 @@ import TileTokens
     '*'             { TokenTimes _ }
     '/'             { TokenDiv _ }
     '^'             { TokenExp _ }
+    ','             { TokenComma _ } 
     ';'             { TokenStatSep _ }
     '('             { TokenLeftParen _ }    
     ')'             { TokenRightParen _ }    
@@ -109,6 +110,12 @@ parseError (t:ts) = error ("Parse error at line:column " ++ (tokenPosn t))
 data StringType = String String | VarName String | TileName String 
     deriving (Show, Eq)
 
+type TileName = String 
+type VarName = String
+-- type CEK = (Exp, Env, Kont)
+-- type Env = [(String, TileInt)]
+-- type Frame = Exp [-] | [-] Exp
+-- type Kont = [Frame]
 
 data Exp
     = CreateCanvas TileName ExpCalc |
@@ -127,6 +134,7 @@ data Exp
     Assign VarName ExpCalc  |
     StatSeq Exp Exp  |
     StatSemi Exp
+    -- Cl VarName Exp Env
     deriving (Show,Eq)
 
 data ExpCalc
