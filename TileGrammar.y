@@ -23,6 +23,8 @@ import TileTokens
     BLANK           { TokenBlank _ }
     LOAD            { TokenLoad _ }
     SCALE           { TokenScale _ }
+    TILEAND         { TokenTileAnd _ }
+    TILEOR          { TokenTileOr _ }
     PRINT           { TokenPrint _ }
     CREATECANVAS    { TokenCreateCanvas _ }
     OUTFILE         { TokenOutFile _ }
@@ -65,7 +67,9 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | SCALE var ExpCalc    {Scale $2 $3}
     | PRINT var ExpCalc ExpCalc    {Print $2 $3 $4}
     | OUTFILE  var      {OutFile $2}
-    | SUBTITLE var var  {Subtitle $2 $3}
+    | TILEAND  var var  {TileAnd $2 $3}
+    | TILEOR var var    {TileOr $2 $3}
+    | SUBTITLE var '('ExpCalc ',' ExpCalc ')' ExpCalc  {Subtitle $2 $4 $6 $8}
     | let var '=' ExpCalc  {Assign $2 $4}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
     | do Exp while ExpBool    {While $2 $4}
@@ -102,19 +106,25 @@ parseError :: [Token] -> a
 parseError [] = error "Unknown Parse Error" 
 parseError (t:ts) = error ("Parse error at line:column " ++ (tokenPosn t))
 
+data StringType = String String | VarName String | TileName String 
+    deriving (Show, Eq)
+
+
 data Exp
-    = CreateCanvas String ExpCalc |
+    = CreateCanvas TileName ExpCalc |
     Load String  |
-    Reverse String  |
-    Rotate String ExpCalc |
-    Blank String  |       
-    Scale String ExpCalc  |    
-    Print String ExpCalc ExpCalc  | 
-    Subtitle String String  |
+    Reverse TileName  |
+    Rotate TileName ExpCalc |
+    Blank TileName  |       
+    Scale TileName ExpCalc  |    
+    Print TileName ExpCalc ExpCalc  | 
+    Subtitle TileName ExpCalc ExpCalc ExpCalc  |
     OutFile String   |
+    TileAnd TileName TileName |
+    TileOr TileName TileName |
     IfElse ExpBool Exp Exp  |
     While Exp ExpBool  |
-    Assign String ExpCalc  |
+    Assign VarName ExpCalc  |
     StatSeq Exp Exp  |
     StatSemi Exp
     deriving (Show,Eq)
@@ -126,7 +136,7 @@ data ExpCalc
     Minus ExpCalc ExpCalc |
     Plus ExpCalc ExpCalc |
     TileInt Int |
-    Get String 
+    Get VarName 
     deriving (Show,Eq)
 
 data ExpBool 
