@@ -1,6 +1,6 @@
 import TileTokens
 import TileGrammar
---import Eval
+import Eval
 import System.Environment
 import Control.Exception
 import System.IO
