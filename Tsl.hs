@@ -1,6 +1,6 @@
 import TileTokens
 import TileGrammar
---import Eval
+import Eval
 import System.Environment
 import Control.Exception
 import System.IO
@@ -10,12 +10,15 @@ main :: IO ()
 main = catch main' noParse
 
 main' = do (fileName : _ ) <- getArgs 
-           source <- readFile fileName
-           putStrLn ("Parsing : " ++ source)
-           let parsed = parseCalc (alexScanTokens source)
-           putStrLn ("Parsed as " ++ (show parsed))
-           --let result = letsEval (parsed)
-           --putStrLn ("Result is " ++ (show result))
+           sourceText <- readFile fileName
+           putStrLn ("Parsing : " ++ sourceText)
+           let parsedProg = parseCalc (alexScanTokens sourceText)
+           putStrLn ("Parsed as " ++ (show parsedProg) ++ "\n")
+           putStrLn ("Type Checking : " ++ (show parsedProg) ++ "\n")
+           let typedProg = typeOf [] parsedProg
+           putStrLn ("Type Checking Passed with type " ++ (unparseType typedProg) ++ "\n") 
+           let result = evalLoop (parsedProg)
+           putStrLn ("Evaluates to " ++ (unparse result) ++ "\n")
 
 noParse :: ErrorCall -> IO ()
 noParse e = do let err =  show e

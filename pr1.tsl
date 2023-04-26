@@ -3,6 +3,7 @@
 
 { }
 
-token加大扩号？ dui
+let tile1 = tile1.tl
+let tile2 = tile2.tl
 
-for ( var expbool exp ) { exp }
+ do Exp for '(' var ';' ExpBool ';' Exp ')'  {For $2 $5 $7 $9}

@@ -1,1 +1,6 @@
-tile2 = rotateTile tile1
+load "tile1.tl";
+NEWTILE rotatedTile;
+CLONE tile1 rotatedTile;
+rotateTile rotatedTile;
+PRINT rotatedTile;
+
