@@ -1,6 +1,8 @@
 module Eval where 
 import TileGrammar
+import Data.List
 
+type Tile = [String]
 data Frame = FAssign TileName Env | FPrint Int-- TODO: Fix frame
 type Kont = [Frame]
 type CEK = (Exp, Env, Kont)
@@ -45,29 +47,73 @@ evalExp ((OutFile var), env, kon) | lookupEnv var env == [] = error ("run time e
     where
         v = snd $ head $ lookupEnv var env
 
--- TODO: implement rotateTile
--- rotateTile :: Exp -> CalcExpr -> Tile
-rotateTile _ _ = []
-
--- TODO: implement scaleTile
--- scaleTile :: Tile -> CalcExpr -> Tile
-scaleTile _ _ = []
-
--- TODO: implement reverseTile 
--- reverseTile :: Tile -> Tile
+-- REVERSE
+reverseTile :: Tile -> Tile
 reverseTile _ = []
+reverseTile = map (map negate)
+    where 
+        negate '0' = '1'  
+        negate '1' = '0'
+        negate c = '0'
 
+-- ROTATE
+rotateTile :: Tile -> CalcExpr -> Tile
+rotateTile tile deg =
+    | (evalCalc deg) `mod` 90 \= 0 = error "invalid degree" 
+    | (evalCalc deg) `div` 90 `mod` 4 == 0 = tile
+    | (evalCalc deg) `div` 90 `mod` 4 == 1 = transpose (reverse tile) 
+    | (evalCalc deg) `div` 90 `mod` 4 == 2 = map reverse (map reverse .transpose) tile
+    | (evalCalc deg) `div` 90 `mod` 4 == 3 = reverse (transpose tile)
 
--- TODO: implement combinationTile
--- combTile :: Tile -> Tile -> String -> Tile
-combinationTile _ _ dir = []
+-- SCALE
+scaleTile :: Tile -> CalcExpr -> Tile
+scaleTile tile n = concatMap (\s -> concat $ replicate (replicate n s)) tile
 
--- TODO: implement reflectTile X-axis
-reflectXTile _ = []
+-- REFLECTX
+reflectXTile :: Tile -> Tile
+reflectXTile = reverse
 
--- TODO: implement reflectTile Y-axis
-reflectYTile _ = []
-    
+-- REFLECTY
+reflectYTile :: Tile -> Tile
+reflectYTile = map reverse
+
+-- CLONE
+-- keyword clone use to clone one tile to another therefore just return the first tile itself
+cloneTile :: Tile -> Tile
+clone tile = tile
+
+subtitleTile :: Tile -> (ExpCalc,ExpCalc) -> ExpCalc -> Tile
+subtitleTile tile (x_exp,y_exp) n_exp = map (take n . drop x) $ (take n . drop y) tile
+    where
+        x = evalCalc x_exp
+        y = evalCalc y_exp
+        n = evalCalc n_exp
+
+-- TILEAND
+andTile :: Tile -> Tile -> Tile
+andTile t1 t2 = zipWith zipRow t1 t2
+    where
+        zipRow r1 r2 = zipWith(\c1 c2 -> if c1 == '1' && c2 == '1' then '1' else '0')
+
+-- TILEOR
+orTile :: Tile -> Tile -> Tile
+andTile t1 t2 = zipWith zipRow t1 t2
+    where
+        zipRow r1 r2 = zipWith(\c1 c2 -> if c1 == '1' || c2 == '1' then '1' else '0')
+
+-- BLANK
+blankTile :: Tile -> Tile
+blankTile tile = replicate (length tile) (replicate (length $ head tile) '0')
+
+-- TILECOMB
+combTile :: Tile -> Tile -> String -> Tile
+combTile t1 t2 dir = 
+    | dir == 'U' = t2 ++ t1
+    | dir == 'D' = t1 ++ t2
+    | dir == 'R' = zipWith (++) t1 t2
+    | dir == 'L' = zipWith (++) t2 t1
+    | otherwise = error "Invalid Direction"
+
 
 -- evalWhile expr cond =
 --     if (evalBoolExpr cond)
