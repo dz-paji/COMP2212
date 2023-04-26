@@ -35,7 +35,7 @@ lookupEnv x (this@(varName, _): env) | x == varName = [this]
 
 -- evaluate assignment
 evalExp :: CEK -> CEK
-evalExp ((Assign var calc_expr), env, kon) = ((Cl var v), env', kon)
+evalExp ((Assign var calc_expr), env, kon) = ((Cl var env'), env', kon)
     where
         v = evalCalc calc_expr
         env' = updateEnv env var v

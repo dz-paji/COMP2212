@@ -81,7 +81,7 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | TILEOR var var    {TileOr $2 $3}
     | TILECOMB var var var  {TileComb $2 $3 $4}
     | SUBTITLE var '('ExpCalc ',' ExpCalc ')' ExpCalc  {Subtitle $2 $4 $6 $8}
-    | new var    {NewTile $2 $4}
+    | new var    {NewTile $2}
     | let var '=' ExpCalc  {Assign $2 $4}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
     | do Exp while '(' ExpBool ')'    {While $2 $5}
@@ -124,7 +124,7 @@ data StringType = String String | VarName String | TileName String
 
 type TileName = String 
 type VarName = String
-type Env = [(String, Int)]
+type Env = [(String, [String])]
 
 data Exp
     = Assign VarName ExpCalc  |

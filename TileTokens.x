@@ -29,6 +29,7 @@ $white+       ;
   REFLECTY        { tok (\p s -> TokenReflectY p) }
   BLANK           { tok (\p s -> TokenBlank p) }
   LOAD            { tok (\p s -> TokenLoad p) }
+  TILECOMB        { tok (\p s -> TokenTileComb p) }
   TILEAND         { tok (\p s -> TokenTileAnd p) }
   TIlEOR          { tok (\p s -> TokenTileOr p) }
   SCALE           { tok (\p s -> TokenScale p) }
@@ -84,6 +85,7 @@ data Token =
   TokenLoad AlexPosn       |
   TokenScale AlexPosn      |
   TokenPrint AlexPosn      |
+  TokenTileComb AlexPosn   |
   TokenTileAnd  AlexPosn   |
   TokenTileOr  AlexPosn    |
   TokenCreateCanvas AlexPosn |
@@ -130,6 +132,7 @@ tokenPosn (TokenLoad (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenCreateCanvas (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenOutFile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenScale (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenTileComb (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTileAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTileOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenSubtitle (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
