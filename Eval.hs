@@ -101,9 +101,15 @@ evalExp ((OutFile var), env, kon) | lookupEnv var env == [] = error ("run time e
 evalExp ((Print part_name canvas_name x_expr y_expr), env, kon) = ((Cl canvas_name env'), env', kon)
     where
         part_value = snd $ head $ (lookupEnv part_name env)
+        -- part_value :: [String] ["111", "111", "111"]
         canvas_value = snd $ head $ (lookupEnv canvas_name env)
+        -- canvas_value :: [String] ["00000", "00000", "00000", "00000", "00000"]
         x_value = fst $ evalCalc (x_expr, env)
         y_value = fst $ evalCalc (y_expr, env)
+        x_size = length (head part_value)
+        y_size = length part_value
+        coords = [(x, y) | x <- [x_value..(x_value + x_size - 1)], y <- [y_value..(y_value + y_size - 1)]]
+        part_val_coords = zip [x_value .. (x_value + x_size - 1)] part_value
         env' = updateEnv env var (printTile value canvas_value)
 
 -- evaluate reverse
@@ -130,6 +136,36 @@ evalExp ((ReflectY var), env, kon) = ((Cl var env'), env', kon)
     where
         value = snd $ head $ (lookupEnv var env)
         env' = updateEnv env var (reflectY value)
+
+-- evaluate subtitle
+evalExp ((Subtitle var_name x_expr, y_expr, multiplier_expr), env, kon) = ((Cl var env'), env', kon)
+    where
+        var_value = snd $ head $ (lookupEnv var_name env)
+        x_value = fst $ evalCalc (x_expr, env)
+        y_value = fst $ evalCalc (y_expr, env)
+        multiplier_value = fst $ evalCalc (multiplier_expr, env)
+        env' = updateEnv env var (subtitle var_value (x_value, y_value) multiplier_value env)
+
+-- evaluate tilecomb
+evalExp ((TileComb var_name1 var_name2 dir), env, kon) = ((Cl var env'), env', kon)
+    where
+        value1 = snd $ head $ (lookupEnv var_name1 env)
+        value2 = snd $ head $ (lookupEnv var_name2 env)
+        env' = updateEnv env var (combTile value1 value2 dir)
+
+-- evaluate tileand
+evalExp ((TileAnd var_name1 var_name2), env, kon) = ((Cl var env'), env', kon)
+    where
+        value1 = snd $ head $ (lookupEnv var_name1 env)
+        value2 = snd $ head $ (lookupEnv var_name2 env)
+        env' = updateEnv env var (andTile value1 value2)
+
+-- evaluate tileor
+evalExp ((TileOr var_name1 var_name2), env, kon) = ((Cl var env'), env', kon)
+    where
+        value1 = snd $ head $ (lookupEnv var_name1 env)
+        value2 = snd $ head $ (lookupEnv var_name2 env)
+        env' = updateEnv env var (orTile value1 value2)
 
 -- evaluate closure
 evalExp ((Cl _ _), env, (FSeq exp):kon) = (exp, env, kon)
