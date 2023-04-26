@@ -75,7 +75,7 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | BLANK  var        {Blank $2}
     | CLONE var var     {Clone $2 $3}
     | SCALE var ExpCalc    {Scale $2 $3}
-    | PRINT var ExpCalc ExpCalc    {Print $2 $3 $4}
+    | PRINT var var '(' ExpCalc ',' ExpCalc ')'   {Print $2 $3 $5 $7}
     | OUTFILE  var      {OutFile $2}
     | TILEAND  var var  {TileAnd $2 $3}
     | TILEOR var var    {TileOr $2 $3}
@@ -133,23 +133,24 @@ data Exp
     Clone  TileName TileName  |
     For Exp VarName ExpBool Exp |
     IfElse ExpBool Exp Exp  |
-    Load String  |              -- String for filename
+    Load String  |              -- String for filename, also as var name
     NewTile TileName  |
-    OutFile TileName  |
-    Print TileName ExpCalc ExpCalc  | 
+    OutFile TileName  | -- also the exit point
+    Print TileName TileName ExpCalc ExpCalc  |     -- need coordinates
     Reverse TileName |
     Rotate TileName ExpCalc |       -- Int for degree to rotate
     ReflectX TileName  |
     ReflectY TileName  |      
     Scale TileName ExpCalc  |    
-    Subtitle TileName ExpCalc ExpCalc ExpCalc  |  
+    Subtitle TileName ExpCalc ExpCalc ExpCalc  |           -- need coordinates
     TileComb TileName TileName String |   -- String for direction U | D | R | L
     TileAnd TileName TileName |
     TileOr TileName TileName |
     While Exp ExpBool  | 
     StatSeq Exp Exp  |
     StatSemi Exp |
-    Cl VarName Env    -- Closure
+    Cl VarName Env |   -- Closure
+    Output VarName Env -- exit point
     deriving (Show,Eq)
 
 data ExpCalc
