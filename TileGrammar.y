@@ -129,27 +129,27 @@ type Env = [(String, [String])]
 data Exp
     = Assign VarName ExpCalc  |
     Blank TileName  |
-    CreateCanvas TileName ExpCalc |
+    CreateCanvas TileName ExpCalc |     
     Clone  TileName TileName  |
     For Exp VarName ExpBool Exp |
     IfElse ExpBool Exp Exp  |
-    Load String  |
-    NewTile TileName Exp  |
+    Load String  |              -- String for filename
+    NewTile TileName  |
     OutFile TileName  |
     Print TileName ExpCalc ExpCalc  | 
-    Reverse TileName String |
-    Rotate TileName ExpCalc |
+    Reverse TileName |
+    Rotate TileName ExpCalc |       -- Int for degree to rotate
     ReflectX TileName  |
     ReflectY TileName  |      
     Scale TileName ExpCalc  |    
     Subtitle TileName ExpCalc ExpCalc ExpCalc  |  
-    TileComb TileName TileName String |
+    TileComb TileName TileName String |   -- String for direction U | D | R | L
     TileAnd TileName TileName |
     TileOr TileName TileName |
     While Exp ExpBool  | 
     StatSeq Exp Exp  |
     StatSemi Exp |
-    Cl VarName Env
+    Cl VarName Env    -- Closure
     deriving (Show,Eq)
 
 data ExpCalc
