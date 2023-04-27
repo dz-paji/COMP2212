@@ -1,9 +1,11 @@
 module Eval where 
 import TileGrammar
 import Data.List
+import System.IO.Unsafe (unsafePerformIO)
 
 type Tile = [String]
-data Frame = FAssign TileName Env | FPrint Int | FSeq Exp | FWhile Exp ExpBool-- TODO: Fix frame
+data Frame = FAssign TileName Env | FPrint Int | FSeq Exp | FWhile Exp ExpBool
+             | FFor Exp VarName ExpBool Exp | FForInc Exp VarName ExpBool Exp-- TODO: Fix frame
 type Kont = [Frame]
 type CEK = (Exp, Env, Kont)
 
@@ -54,7 +56,7 @@ evalExp ((Blank var), env, kon) = ((Cl var env'), env', kon)
             [] -> 0
             (x:xs) -> length (snd x) :: Int
         blank_size_y = length (lookupEnv var env)
-        blank = replicate blank_size (replicate blank_size '0')
+        blank = replicate blank_size_y (replicate blank_size_x '0')
         env' = updateEnv env var blank
 
 -- evaluate CreateCanvas
@@ -70,23 +72,30 @@ evalExp ((Clone var1 var2), env, kon) = ((Cl var2 env'), env', kon)
         env' = updateEnv env var2 value1
 
 -- evaluate for
-evalExp ((For do_expr i i exp), env, kon) = ((Cl var env'), env', kon)
-    where
+evalExp ((For do_expr i cond inc_exp), env, kon) = (do_expr, env, (FFor do_expr i cond inc_exp):kon)
+evalExp (v, env, (FFor do_expr i cond inc_exp):kon)
+    | checkTerm v && ((evalBoolExpr cond env) == True) = (inc_exp, env, (FForInc do_expr i cond inc_exp):kon)
+    | checkTerm v && ((evalBoolExpr cond env) == False) = ((Cl "for ends" env), env, kon)
+evalExp (v, env, (FForInc do_expr i cond inc_exp):kon)
+    | checkTerm v = (do_expr, env, (FFor do_expr i cond inc_exp):kon)
 
-evalExp ((While do_exp bool_exp), env, kon)
-    | evalBoolExpr bool_exp == True = (do_exp, env, (FWhile do_exp bool_exp):kon)
-    | otherwise = ((Cl "while loop" env), env, kon)
-evalExp (v, env, (FWhile do_exp bool_exp):kon) | checkTerm v = ((While do_exp bool_exp), env, kon)
+-- evaluate While
+evalExp ((While do_exp bool_exp), env, kon) = (do_exp, env, (FWhile do_exp bool_exp):kon)
+evalExp (v, env, (FWhile do_exp bool_exp):kon)
+    | checkTerm v && ((evalBoolExpr bool_exp env) == True) = ((While do_exp bool_exp), env, kon)
+    | checkTerm v && ((evalBoolExpr bool_exp env) == False) = ((Cl "while ends" env), env, kon)
 
 -- evaluate if else
 evalExp ((IfElse bool_exp then_exp else_exp), env, kon)
-    | evalBoolExpr bool_exp == True = (then_exp, env, kon)
+    | evalBoolExpr bool_exp env == True = (then_exp, env, kon)
     | otherwise = (else_exp, env, kon)
 
 -- evaluate Load
-evalExp ((Load file_name), env, kon) = ((Cl varname env'), env', kon)
+evalExp ((Load file_name), env, kon) = ((Cl var_name env'), env', kon)
     where
-        env' = updateEnv env file_name (readFile file_name)
+        tile_value = escapeMonad $ readTile file_name
+        var_name = removeTslExt file_name
+        env' = updateEnv env var_name tile_value
 
 -- evaluate new tile
 evalExp ((NewTile var), env, kon) = ((Cl var env'), env', kon)
@@ -106,11 +115,7 @@ evalExp ((Print part_name canvas_name x_expr y_expr), env, kon) = ((Cl canvas_na
         -- canvas_value :: [String] ["00000", "00000", "00000", "00000", "00000"]
         x_value = fst $ evalCalc (x_expr, env)
         y_value = fst $ evalCalc (y_expr, env)
-        x_size = length (head part_value)
-        y_size = length part_value
-        coords = [(x, y) | x <- [x_value..(x_value + x_size - 1)], y <- [y_value..(y_value + y_size - 1)]]
-        part_val_coords = zip [x_value .. (x_value + x_size - 1)] part_value
-        env' = updateEnv env var (printTile value canvas_value)
+        env' = updateEnv env canvas_name (printTile canvas_value part_value (x_value, y_value))
 
 -- evaluate reverse
 evalExp ((Reverse var), env, kon) = ((Cl var env'), env', kon)
@@ -122,50 +127,49 @@ evalExp ((Reverse var), env, kon) = ((Cl var env'), env', kon)
 evalExp ((Rotate var calc_expr), env, kon) = ((Cl var env'), env', kon)
     where
         value = snd $ head $ (lookupEnv var env)
-        v = fst $ evalCalc (calc_expr, env ) :: Int
-        env' = updateEnv env var (rotateTile value v env)
+        env' = updateEnv env var (rotateTile value calc_expr env)
 
 -- evaluate reflect x
 evalExp ((ReflectX var), env, kon) = ((Cl var env'), env', kon)
     where
         value = snd $ head $ (lookupEnv var env)
-        env' = updateEnv env var (reflectX value)
+        env' = updateEnv env var (reflectXTile value)
 
 -- evaluate reflect y
 evalExp ((ReflectY var), env, kon) = ((Cl var env'), env', kon)
     where
         value = snd $ head $ (lookupEnv var env)
-        env' = updateEnv env var (reflectY value)
+        env' = updateEnv env var (reflectYTile value)
 
 -- evaluate subtitle
-evalExp ((Subtitle var_name x_expr, y_expr, multiplier_expr), env, kon) = ((Cl var env'), env', kon)
+evalExp ((Subtitle var_name x_expr y_expr multiplier_expr), env, kon) = ((Cl var_name env'), env', kon)
     where
         var_value = snd $ head $ (lookupEnv var_name env)
         x_value = fst $ evalCalc (x_expr, env)
         y_value = fst $ evalCalc (y_expr, env)
         multiplier_value = fst $ evalCalc (multiplier_expr, env)
-        env' = updateEnv env var (subtitle var_value (x_value, y_value) multiplier_value env)
+        env' = updateEnv env var_name (subtitleTile var_value (x_expr, y_expr) multiplier_expr env)
 
 -- evaluate tilecomb
-evalExp ((TileComb var_name1 var_name2 dir), env, kon) = ((Cl var env'), env', kon)
+evalExp ((TileComb var_name1 var_name2 dir), env, kon) = ((Cl var_name1 env'), env', kon)
     where
         value1 = snd $ head $ (lookupEnv var_name1 env)
         value2 = snd $ head $ (lookupEnv var_name2 env)
-        env' = updateEnv env var (combTile value1 value2 dir)
+        env' = updateEnv env var_name1 (combTile value1 value2 dir)
 
 -- evaluate tileand
-evalExp ((TileAnd var_name1 var_name2), env, kon) = ((Cl var env'), env', kon)
+evalExp ((TileAnd var_name1 var_name2), env, kon) = ((Cl var_name1 env'), env', kon)
     where
         value1 = snd $ head $ (lookupEnv var_name1 env)
         value2 = snd $ head $ (lookupEnv var_name2 env)
-        env' = updateEnv env var (andTile value1 value2)
+        env' = updateEnv env var_name1 (andTile value1 value2)
 
 -- evaluate tileor
-evalExp ((TileOr var_name1 var_name2), env, kon) = ((Cl var env'), env', kon)
+evalExp ((TileOr var_name1 var_name2), env, kon) = ((Cl var_name1 env'), env', kon)
     where
         value1 = snd $ head $ (lookupEnv var_name1 env)
         value2 = snd $ head $ (lookupEnv var_name2 env)
-        env' = updateEnv env var (orTile value1 value2)
+        env' = updateEnv env var_name1 (orTile value1 value2)
 
 -- evaluate closure
 evalExp ((Cl _ _), env, (FSeq exp):kon) = (exp, env, kon)
@@ -178,6 +182,16 @@ evalExp (v, env, (FSeq exp):kon) | checkTerm v = (exp, env, kon)
 ---------------------------------
 ------- HELPER FUNCTIONS --------
 ---------------------------------
+-- read tile file
+readTile file_name =
+    let tile_line = unsafePerformIO (readFile file_name) in 
+    return $ map removeCR (lines tile_line)
+    where
+        removeCR l  | last l == '\r' = init l
+                    | last l == '\n' = init l
+                    | otherwise = l
+
+escapeMonad a = head a
 -- remove .tsl extension from file name
 removeTslExt :: String -> String
 removeTslExt fileName = (take (length fileName - 4)) fileName
@@ -192,16 +206,16 @@ reverseTile value = map (map negate) value
         negate c = '0'
 
 -- ROTATE
-rotateTile :: Tile -> CalcExpr -> Env -> Tile
-rotateTile tile deg env =
-    | (fst $ evalCalc (deg, env)) `mod` 90 \= 0 = error "invalid degree" 
+rotateTile :: Tile -> ExpCalc -> Env -> Tile
+rotateTile tile deg env
+    | (fst $ evalCalc (deg, env)) `mod` 90 /= 0 = error "invalid degree" 
     | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 0 = tile
     | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 1 = transpose (reverse tile) 
     | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 2 = map reverse (map reverse .transpose) tile
     | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 3 = reverse (transpose tile)
 
 -- SCALE
-scaleTile :: Tile -> CalcExpr -> Tile
+scaleTile :: Tile -> ExpCalc -> Tile
 scaleTile tile n = concatMap (\s -> concat $ replicate (replicate n s)) tile
 
 -- REFLECTX
@@ -214,8 +228,8 @@ reflectYTile = map reverse
 
 -- CLONE
 -- keyword clone use to clone one tile to another therefore just return the first tile itself
-cloneTile :: Tile -> Tile
-clone tile = tile
+-- cloneTile :: Tile -> Tile
+-- clone tile = tile
 
 subtitleTile :: Tile -> (ExpCalc,ExpCalc) -> ExpCalc -> Env -> Tile
 subtitleTile tile (x_exp,y_exp) n_exp env = map (take n . drop x) $ (take n . drop y) tile
@@ -232,7 +246,7 @@ andTile t1 t2 = zipWith zipRow t1 t2
 
 -- TILEOR
 orTile :: Tile -> Tile -> Tile
-andTile t1 t2 = zipWith zipRow t1 t2
+orTile t1 t2 = zipWith zipRow t1 t2
     where
         zipRow r1 r2 = zipWith(\c1 c2 -> if c1 == '1' || c2 == '1' then '1' else '0')
 
@@ -242,12 +256,28 @@ blankTile tile = replicate (length tile) (replicate (length $ head tile) '0')
 
 -- TILECOMB
 combTile :: Tile -> Tile -> String -> Tile
-combTile t1 t2 dir = 
-    | dir == 'U' = t2 ++ t1
-    | dir == 'D' = t1 ++ t2
-    | dir == 'R' = zipWith (++) t1 t2
-    | dir == 'L' = zipWith (++) t2 t1
+combTile t1 t2 dir
+    | dir == "U" = t2 ++ t1
+    | dir == "D" = t1 ++ t2
+    | dir == "R" = zipWith (++) t1 t2
+    | dir == "L" = zipWith (++) t2 t1
     | otherwise = error "Invalid Direction"
+
+
+printTile :: Tile -> Tile -> (Int, Int) -> Tile
+printTile tile1 tile2 (x,y) =
+    let (top,bot) = splitAt y tile1
+        (left,remain) = map (splitAt x) bot
+    in top ++ left ++ (substitute remain tile2)
+        where
+            splitAt _ [] = []
+            splitAt n ls =
+                let (ys, zs) = splitAt (n - 1) (tail xs)
+                in (head xs : ys, zs)
+            substitute :: Tile -> Tile -> Tile
+            substitute [] ys = ys
+            substitute xs [] = xs
+            substitute (x:xs) (y:ys) = (y ++ drop (length y) x) : substitute xs ys
 
 evalIfElse :: Bool -> Exp -> Exp -> Exp
 evalIfElse True expr _ = expr
@@ -274,19 +304,29 @@ evalBoolExpr (IsEq expr_a expr_b) env = evalCalc (expr_a, env) == evalCalc (expr
 evalBoolExpr TileTrue _ = True
 evalBoolExpr TileFalse _ = False
 
+-- evalCalcEnv (Get a) env = (read (snd $ head $ (lookupEnv a env)) :: Int, env)
+-- evalCalc :: (ExpCalc, Env) -> (Int, Env)
+-- evalCalc (expr, env) = case expr of
+--     (Expo base exponent) -> ((fst $ evalCalc (base, env)) ^ (fst $ evalCalc (exponent, env)), env)
+--     (Times a b) -> ((fst $ evalCalc a * (fst $ evalCalc b)), env)
+--     (Div a  b) -> ((fst $ evalCalc a / (fst $ evalCalc b)), env)
+--     (Minus a b) -> ((fst $ evalCalc a - (fst $ evalCalc b)), env)
+--     (Plus a b) -> ((fst $ evalCalc a + (fst $ evalCalc b)), env)
+--     (TileInt a) -> (a, env)
+--     (Get a) -> ((read (snd $ head $ (lookupEnv a env)) :: Int), env)
 evalCalc :: (ExpCalc, Env) -> (Int, Env)
 evalCalc (expr, env) = case expr of
-    (Expo base exponent) -> (evalCalc base ^ (evalCalc exponent), env)
-    (Times a b) -> ((evalCalc a * evalCalc b), env)
-    (Div a  b) -> ((evalCalc a / evalCalc b), env)
-    (Minus a b) -> ((evalCalc a - evalCalc b), env)
-    (Plus a b) -> ((evalCalc a + evalCalc b), env)
-    (TileInt a) -> (evalCalc a, env)
-    (Get a) -> ((read (snd $ head $ (lookupEnv a env)) :: Int), env)
+    (Expo base exponent) -> ((fst $ evalCalc (base, env)) ^ (fst $ evalCalc (exponent, env)), env)
+    (Times a b) -> (((fst $ evalCalc (a, env)) * (fst $ evalCalc (b, env))), env)
+    (Div a  b) -> (((fst $ evalCalc (a, env)) / (fst $ evalCalc (b, env))), env)
+    (Minus a b) -> (((fst $ evalCalc (a, env)) - (fst $ evalCalc (b, env))), env)
+    (Plus a b) -> (((fst $ evalCalc (a, env)) + (fst $ evalCalc (b, env))), env)
+    (TileInt a) -> (a, env)
+    (Get a) -> ((read (head $ snd $ head $ (lookupEnv a env)) :: Int), env)
 
-unpackClosure :: Exp -> (Exp, Env)
-unpackClosure (Cl var env) = (var, env)
-unpackClosure e = (e, [])
+-- unpackClosure :: Exp -> (Exp, Env)
+-- unpackClosure (Cl var env) = (var, env)
+-- unpackClosure e = (e, [])
 
 updateEnv :: Env -> String -> [String] -> Env
 updateEnv env varName value = (varName, value) : env
@@ -294,7 +334,7 @@ updateEnv env varName value = (varName, value) : env
     -- | otherwise = ([(varName, exp)] : (filter (\(x, _) -> x /= varName) env))
 
 -- check if a term is terminated
-checkTerm :: a -> Bool
+checkTerm :: Exp -> Bool
 -- checkTerm (TileInt _) = True
 -- checkTerm (TileTrue) = True
 -- checkTerm (TileFalse) = True
@@ -311,4 +351,4 @@ doEval (e, env, kon) = if (e' == e) && (checkTerm e') && (null kon) -- loop unti
     where
         (e', env', kon') = evalExp (e, env, kon)
 
-parseExp (OutFile var, env) = snd $ length $ lookupEnv var env
+-- parseExp (OutFile var, env) = snd $ length $ lookupEnv var env

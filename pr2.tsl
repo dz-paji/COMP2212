@@ -2,5 +2,16 @@ load "tile1.tl";
 NEWTILE rotatedTile;
 CLONE tile1 rotatedTile;
 rotateTile rotatedTile;
+
+--creating a 8*8 canvas
+CreateCanvas canvas 8;      
+--print the tile into the canvas    
+PRINT canvas rotatedTile 0 0;
+--stdout the canvas
+OUTFILE canvas;
+
+NEWTILE rotatedTile;
+CLONE tile1 rotatedTile;
+rotateTile rotatedTile;
 PRINT rotatedTile;
 

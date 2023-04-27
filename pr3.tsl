@@ -1,4 +1,3 @@
-
 --input: tile1
 -- 通过X轴reflect，通过Y轴reflect，通过XY轴reflection
 
@@ -8,10 +7,47 @@ NEWTILE reversedTileY;
 NEWTILE reversedTileXY;
 NEWTILE blankTile;
 CLONE tile1 blankTile;
+CLONE tile1 blankTile2;
+BLANK blankTile2;
 BLANK blankTile;
 CLONE tile1 reversedTileX;
 CLONE tile1 reversedTileY;
 REFLECTX reversedTileX;
+REFLECTY reversedTileY;
+CLONE reversedTileY reversedTileXY;
+REFLECTX reversedTileXY;
+
+-- combine tiles into a base tile
+--baseTile = TILECOMB tile1 reversedTileX BLANK
+--            BLANK reversedTileY reversedTileXY
+
+TILECOMB tile1 reversedTileX R;
+TILECOMB tile1 blankTile R;
+TILECOMB blankTile2 reversedTileY R;
+TILECOMB blankTile2 reversedTileXY R;
+TILECOMB tile1 blankTile2 D；
+
+
+--横向复制baseTile，然后纵向复制新的Tile
+--copyBaseTileX = baseTile*10 --横向复制10次
+--copyBaseTileY = baseTile*30 --纵向复制30次
+NEWTILE copyBaseTileX;
+NEWTILE copyBaseTileY;
+
+CLONE tile1 copyBaseTileX;
+do TILECOMB copyBaseTileX copyBaseTileX R for Int i = 0, i<10, i++;
+CLONE copyBaseTileX copyBaseTileY;
+do TILECOMB copyBaseTileY copyBaseTileY D for Int j = 0, j<30, j++;
+CLONE copyBaseTileY resultTile;
+
+--creating a 50*50 canvas 
+CreateCanvas canvas 50; 
+--print the tile into the canvas (Not sure about the coordinates)
+PRINT resultTile canvas 0 0;
+--stdout the canvas 
+OUTFILE canvas;
+
+
 REFLECTY reversedTileY;
 CLONE reversedTileY reversedTileXY;
 REFLECTX reversedTileXY;

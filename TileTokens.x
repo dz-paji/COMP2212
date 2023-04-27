@@ -6,7 +6,7 @@ module TileTokens where
 
 $digit = 0-9     
 -- digits 
-$alpha = [a-zA-Z'.'0-9]    
+$alpha = [a-zA-Z\.]    
 -- alphabetic characters
 
 tokens :-
