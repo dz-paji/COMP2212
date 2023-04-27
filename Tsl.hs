@@ -7,7 +7,7 @@ import System.IO
 
 
 main :: IO ()
-main = catch main' noParse
+main = catch main' errorHandler
 
 main' = do {(fileName : _ ) <- getArgs 
            ; source <- readFile fileName
@@ -19,7 +19,7 @@ main' = do {(fileName : _ ) <- getArgs
            ; putStrLn ("Result = ")
            ; mapM_ putStrLn ( parseOutput result)}
 
-noParse :: ErrorCall -> IO ()
-noParse e = do let err =  show e
-               hPutStr stderr err
-               return ()
+errorHandler :: ErrorCall -> IO ()
+errorHandler e = do let err =  show e
+                    hPutStr stderr err
+                    return ()

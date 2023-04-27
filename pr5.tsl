@@ -1,0 +1,15 @@
+LOAD tile1.tl;
+new subtile1;
+new subtile2;
+new subtile3;
+CLONE tile1 subtile1;
+CLONE tile1 subtile2;
+CLONE tile1 subtile3;
+SUBTITLE subtile1 (0,0) 6;
+SUBTITLE subtile2 (2,2) 6;
+SUBTITLE subtile1 (4,4) 6;
+TILECOMB subtile1 subtile2 R;
+TILECOMB subtile1 subtile3 R;
+CreateCanvas newCanvas 18;
+PRINT newCanvas subtile1 (0,0);
+OUTFILE newCanvas;

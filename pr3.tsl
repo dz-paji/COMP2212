@@ -1,11 +1,8 @@
---input: tile1
--- 通过X轴reflect，通过Y轴reflect，通过XY轴reflection
-
-load “tile1.tsl”； 
-NEWTILE reversedTileX;
-NEWTILE reversedTileY;
-NEWTILE reversedTileXY;
-NEWTILE blankTile;
+LOAD tile1.tsl;
+new reversedTileX;
+new reversedTileY;
+new reversedTileXY;
+new blankTile;
 CLONE tile1 blankTile;
 CLONE tile1 blankTile2;
 BLANK blankTile2;
@@ -17,9 +14,6 @@ REFLECTY reversedTileY;
 CLONE reversedTileY reversedTileXY;
 REFLECTX reversedTileXY;
 
--- combine tiles into a base tile
---baseTile = TILECOMB tile1 reversedTileX BLANK
---            BLANK reversedTileY reversedTileXY
 
 TILECOMB tile1 reversedTileX R;
 TILECOMB tile1 blankTile R;
@@ -27,47 +21,20 @@ TILECOMB blankTile2 reversedTileY R;
 TILECOMB blankTile2 reversedTileXY R;
 TILECOMB tile1 blankTile2 D；
 
-
---横向复制baseTile，然后纵向复制新的Tile
---copyBaseTileX = baseTile*10 --横向复制10次
---copyBaseTileY = baseTile*30 --纵向复制30次
-NEWTILE copyBaseTileX;
-NEWTILE copyBaseTileY;
+new copyBaseTileX;
+new copyBaseTileY;
 
 CLONE tile1 copyBaseTileX;
-do TILECOMB copyBaseTileX copyBaseTileX R for Int i = 0, i<10, i++;
-CLONE copyBaseTileX copyBaseTileY;
-do TILECOMB copyBaseTileY copyBaseTileY D for Int j = 0, j<30, j++;
-CLONE copyBaseTileY resultTile;
 
---creating a 50*50 canvas 
-CreateCanvas canvas 50; 
---print the tile into the canvas (Not sure about the coordinates)
-PRINT resultTile canvas 0 0;
---stdout the canvas 
+let i = 0;
+do TILECOMB copyBaseTileX copyBaseTileX R; for (i; i < 10; let i = i + 1);
+
+CLONE copyBaseTileX copyBaseTileY;
+let j = 0
+do TILECOMB copyBaseTileY copyBaseTileY D; for (j; j < 30; let j = j + 1);
+
+CLONE copyBaseTileY resultTile;
+CreateCanvas canvas 180; 
+PRINT canvas resultTile (0,0);
 OUTFILE canvas;
 
-
-REFLECTY reversedTileY;
-CLONE reversedTileY reversedTileXY;
-REFLECTX reversedTileXY;
-
-
--- combine tiles into a base tile
-NEWTILE baseTile1
-NEWTILE baseTile2
-NEWTILE baseTile3
-NEWTILE baseTile4
-NEWTILE baseTile5
-baseTile1 = TILECOMB tile1 reversedTileX L;
-baseTile2 = TILECOMB baseTile1 blackTile L;
-baseTile3 = TILECOMB blackTile reversedTileY L;
-baseTile4 = TILECOMB baseTile3 reversedTileXY L;
-baseTile5 = TILECOMB baseTile2 baseTile4 D;
-
---baseTile = TILECOMB tile1 reversedTileX BLANK
---                    BLANK reversedTileY reversedTileXY
-
---横向复制baseTile，然后纵向复制新的Tile
-copyBaseTileX = baseTile*10 --横向复制10次
-copyBaseTileY = baseTile*30 --纵向复制30次

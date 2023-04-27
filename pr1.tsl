@@ -1,9 +1,21 @@
---read 两个tile file文件 然后用for循环第一个文件读取1，3，5，7 第二个读取2，4，6，8然后生产一个新的tile文件
---用到的函数：for，readfile
+LOAD tile1.tl;
+LOAD tile2.tl;
+CREATECANVAS canvas 64;
+new base;
+new base1;
 
-{ }
+CLONE base tile1;
+CLONE base1 tile2;
+TILECOMB base tile2 R;
+TILECOMB base1 tile1 R;
+TILECOMB base base1 D;
 
-let tile1 = tile1.tl
-let tile2 = tile2.tl
+let i = 0;
+let j = 0;
+do 
+PRINT canvas tile1 (i,j);
+let j = j + 2;
+if j == 64 then let j = 0; let i = i + 2; else let j = j;
+while ( i < 64 );
 
- do Exp for '(' var ';' ExpBool ';' Exp ')'  {For $2 $5 $7 $9}
+OUTFILE canvas;

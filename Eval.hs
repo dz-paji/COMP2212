@@ -371,4 +371,4 @@ doEval (e, env, kon) = if (e' == e) && (checkTerm e') && (null kon) -- loop unti
 -- parseExp (OutFile var, env) = snd $ length $ lookupEnv var env
 parseOutput :: Exp -> [String]
 parseOutput (Output var env) = snd $ head $ lookupEnv var env
-parseOutput _ = ["Error: Unexpected line", "Last line of program should be OutFile"]
+parseOutput _ = error ("Error: Unexpected line, Last line of program should be OutFile")
