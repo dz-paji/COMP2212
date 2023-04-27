@@ -1,2 +1,11 @@
 --input: tile1 tile2 tile3
 --function: for if-else, AND,OR,Negation
+LOAD tile1.tl;
+LOAD tile2.tl;
+LOAD tile3.tl;
+
+NEWTILE negationTile3;
+CLONE tile3 negationTile3;
+!! negationTile3;
+TILEAND tile1 negationTile3;
+TILEAND tile2 negationTile3;

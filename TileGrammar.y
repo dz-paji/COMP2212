@@ -142,7 +142,7 @@ data Exp
     ReflectX TileName  |
     ReflectY TileName  |      
     Scale TileName ExpCalc  |    
-    Subtitle TileName ExpCalc ExpCalc ExpCalc  |           -- need coordinates
+    Subtitle TileName ExpCalc ExpCalc ExpCalc  |           -- need coordinates params: varname, x, y, size
     TileComb TileName TileName String |   -- String for direction U | D | R | L
     TileAnd TileName TileName |
     TileOr TileName TileName |

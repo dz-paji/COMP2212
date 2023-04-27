@@ -6,7 +6,7 @@ module TileTokens where
 
 $digit = 0-9     
 -- digits 
-$alpha = [a-zA-Z]    
+$alpha = [a-zA-Z\.]    
 -- alphabetic characters
 
 tokens :-
@@ -28,6 +28,7 @@ $white+       ;
   REFLECTX        { tok (\p s -> TokenReflectX p) }
   REFLECTY        { tok (\p s -> TokenReflectY p) }
   BLANK           { tok (\p s -> TokenBlank p) }
+  CLONE           { tok (\p s -> TokenClone p) }
   LOAD            { tok (\p s -> TokenLoad p) }
   TILECOMB        { tok (\p s -> TokenTileComb p) }
   TILEAND         { tok (\p s -> TokenTileAnd p) }
