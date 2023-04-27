@@ -150,6 +150,12 @@ evalExp ((Subtitle var_name x_expr y_expr multiplier_expr), env, kon) = ((Cl var
         multiplier_value = fst $ evalCalc (multiplier_expr, env)
         env' = updateEnv env var_name (subtitleTile var_value (x_expr, y_expr) multiplier_expr env)
 
+-- evaluate scale
+evalExp ((Scale var calc_expr), env, kon) = ((Cl var env'), env', kon)
+    where
+        value = snd $ head $ (lookupEnv var env)
+        env' = updateEnv env var (scaleTile value calc_expr env)
+
 -- evaluate tilecomb
 evalExp ((TileComb var_name1 var_name2 dir), env, kon) = ((Cl var_name1 env'), env', kon)
     where
@@ -198,8 +204,7 @@ removeTslExt fileName = (take (length fileName - 4)) fileName
 
 -- REVERSE
 reverseTile :: Tile -> Tile
-reverseTile _ = []
-reverseTile value = map (map negate) value
+reverseTile = map (map negate)
     where 
         negate '0' = '1'  
         negate '1' = '0'
@@ -207,16 +212,20 @@ reverseTile value = map (map negate) value
 
 -- ROTATE
 rotateTile :: Tile -> ExpCalc -> Env -> Tile
-rotateTile tile deg env
-    | (fst $ evalCalc (deg, env)) `mod` 90 /= 0 = error "invalid degree" 
-    | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 0 = tile
-    | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 1 = transpose (reverse tile) 
-    | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 2 = map reverse (map reverse .transpose) tile
-    | (fst $ evalCalc (deg, env)) `div` 90 `mod` 4 == 3 = reverse (transpose tile)
+rotateTile tile deg_exp env
+    | deg `mod` 90 /= 0 = error "invalid degree" 
+    | deg `div` 90 `mod` 4 == 0 = tile
+    | deg `div` 90 `mod` 4 == 1 = transpose tile
+    | deg `div` 90 `mod` 4 == 2 = transpose $ transpose tile
+    | deg `div` 90 `mod` 4 == 3 = transpose $ transpose $ transpose tile
+        where
+            deg = fst $ evalCalc(deg_exp, env)
 
 -- SCALE
-scaleTile :: Tile -> ExpCalc -> Tile
-scaleTile tile n = concatMap (\s -> concat $ replicate (replicate n s)) tile
+scaleTile :: Tile -> ExpCalc -> Env -> Tile
+scaleTile tile n_exp env = concatMap (\s -> concat $ replicate n (replicate n s)) tile
+    where 
+        n = fst $ evalCalc(n_exp, env)
 
 -- REFLECTX
 reflectXTile :: Tile -> Tile
@@ -242,13 +251,15 @@ subtitleTile tile (x_exp,y_exp) n_exp env = map (take n . drop x) $ (take n . dr
 andTile :: Tile -> Tile -> Tile
 andTile t1 t2 = zipWith zipRow t1 t2
     where
-        zipRow r1 r2 = zipWith(\c1 c2 -> if c1 == '1' && c2 == '1' then '1' else '0')
+        zipRow :: String -> String -> String
+        zipRow = zipWith(\c1 c2 -> if c1 == '1' && c2 == '1' then '1' else '0')
 
 -- TILEOR
 orTile :: Tile -> Tile -> Tile
 orTile t1 t2 = zipWith zipRow t1 t2
     where
-        zipRow r1 r2 = zipWith(\c1 c2 -> if c1 == '1' || c2 == '1' then '1' else '0')
+        zipRow :: String -> String -> String
+        zipRow = zipWith(\c1 c2 -> if c1 == '1' || c2 == '1' then '1' else '0')
 
 -- BLANK
 blankTile :: Tile -> Tile
@@ -267,13 +278,14 @@ combTile t1 t2 dir
 printTile :: Tile -> Tile -> (Int, Int) -> Tile
 printTile tile1 tile2 (x,y) =
     let (top,bot) = splitAt y tile1
-        (left,remain) = map (splitAt x) bot
+        (left,remain) = unzip $ map ( splitAt x) bot
     in top ++ left ++ (substitute remain tile2)
         where
-            splitAt _ [] = []
-            splitAt n ls =
-                let (ys, zs) = splitAt (n - 1) (tail xs)
-                in (head xs : ys, zs)
+            splitAt n ls 
+                | n == 0 = ([],ls)
+                | otherwise = 
+                    let (ys, zs) = splitAt (n - 1) (tail ls)
+                    in (head ls : ys, zs)
             substitute :: Tile -> Tile -> Tile
             substitute [] ys = ys
             substitute xs [] = xs
@@ -318,7 +330,7 @@ evalCalc :: (ExpCalc, Env) -> (Int, Env)
 evalCalc (expr, env) = case expr of
     (Expo base exponent) -> ((fst $ evalCalc (base, env)) ^ (fst $ evalCalc (exponent, env)), env)
     (Times a b) -> (((fst $ evalCalc (a, env)) * (fst $ evalCalc (b, env))), env)
-    (Div a  b) -> (((fst $ evalCalc (a, env)) / (fst $ evalCalc (b, env))), env)
+    (Div a  b) -> (((fst $ evalCalc (a, env)) `div` (fst $ evalCalc (b, env))), env)
     (Minus a b) -> (((fst $ evalCalc (a, env)) - (fst $ evalCalc (b, env))), env)
     (Plus a b) -> (((fst $ evalCalc (a, env)) + (fst $ evalCalc (b, env))), env)
     (TileInt a) -> (a, env)
