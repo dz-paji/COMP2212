@@ -52,12 +52,12 @@ evalExp ((Assign var calc_expr), env, kon) = ((Cl var env'), env', kon)
 -- evaluate Blank
 evalExp ((Blank var), env, kon) = ((Cl var env'), env', kon)
     where 
-        blank_size_x = case (lookupEnv var env) of
-            [] -> 0
-            (x:xs) -> length (snd x) :: Int
-        blank_size_y = length (lookupEnv var env)
-        blank = replicate blank_size_y (replicate blank_size_x '0')
-        env' = updateEnv env var blank
+        -- blank_size_x = case (lookupEnv var env) of
+        --     [] -> 0
+        --     (x:xs) -> length (snd x) :: Int
+        -- blank_size_y = length (lookupEnv var env)
+        blank_this = snd $ head $ lookupEnv var env
+        env' = updateEnv env var (blankTile blank_this)
 
 -- evaluate CreateCanvas
 evalExp ((CreateCanvas var calc_expr), env, kon) = ((Cl var env'), env', kon)
@@ -107,7 +107,7 @@ evalExp ((OutFile var), env, kon) | lookupEnv var env == [] = error ("run time e
                                   | otherwise = ((Output var env), env, kon)
 
 -- evaluate print
-evalExp ((Print part_name canvas_name x_expr y_expr), env, kon) = ((Cl canvas_name env'), env', kon)
+evalExp ((Print canvas_name part_name x_expr y_expr), env, kon) = ((Cl canvas_name env'), env', kon)
     where
         part_value = snd $ head $ (lookupEnv part_name env)
         -- part_value :: [String] ["111", "111", "111"]
@@ -219,15 +219,15 @@ rotateTile :: Tile -> ExpCalc -> Env -> Tile
 rotateTile tile deg_exp env
     | deg `mod` 90 /= 0 = error "invalid degree" 
     | deg `div` 90 `mod` 4 == 0 = tile
-    | deg `div` 90 `mod` 4 == 1 = transpose tile
-    | deg `div` 90 `mod` 4 == 2 = transpose $ transpose tile
-    | deg `div` 90 `mod` 4 == 3 = transpose $ transpose $ transpose tile
+    | deg `div` 90 `mod` 4 == 1 = transpose $ reverse tile          
+    | deg `div` 90 `mod` 4 == 2 = map reverse . reverse $ tile
+    | deg `div` 90 `mod` 4 == 3 = reverse $ transpose tile  
         where
             deg = fst $ evalCalc(deg_exp, env)
 
 -- SCALE
 scaleTile :: Tile -> ExpCalc -> Env -> Tile
-scaleTile tile n_exp env = concatMap (\s -> concat $ replicate n (replicate n s)) tile
+scaleTile tile n_exp env = concatMap ( replicate n . concatMap ( replicate n)) tile
     where 
         n = fst $ evalCalc(n_exp, env)
 
@@ -283,7 +283,7 @@ printTile :: Tile -> Tile -> (Int, Int) -> Tile
 printTile tile1 tile2 (x,y) =
     let (top,bot) = splitAt y tile1
         (left,remain) = unzip $ map ( splitAt x) bot
-    in top ++ left ++ (substitute remain tile2)
+    in top ++ (zipWith (++) left (substitute remain tile2))
         where
             splitAt n ls 
                 | n == 0 = ([],ls)
@@ -294,6 +294,12 @@ printTile tile1 tile2 (x,y) =
             substitute [] ys = ys
             substitute xs [] = xs
             substitute (x:xs) (y:ys) = (y ++ drop (length y) x) : substitute xs ys
+
+
+-- util filter
+filterEmpty :: [String] -> [String]
+filterEmpty = filter (\x -> x /= "")
+
 
 evalIfElse :: Bool -> Exp -> Exp -> Exp
 evalIfElse True expr _ = expr
@@ -338,7 +344,11 @@ evalCalc (expr, env) = case expr of
     (Minus a b) -> (((fst $ evalCalc (a, env)) - (fst $ evalCalc (b, env))), env)
     (Plus a b) -> (((fst $ evalCalc (a, env)) + (fst $ evalCalc (b, env))), env)
     (TileInt a) -> (a, env)
+    (GetSize a) -> (getTileSize(a, env), env)
     (Get a) -> ((read (head $ snd $ head $ (lookupEnv a env)) :: Int), env)
+
+-- GetTileSize :: (String, Env) -> Int
+getTileSize (tile_name, env) = length $ head $ snd $ head $ (lookupEnv tile_name env)
 
 -- unpackClosure :: Exp -> (Exp, Env)
 -- unpackClosure (Cl var env) = (var, env)

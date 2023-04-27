@@ -7,9 +7,15 @@ CLONE tile1 subtile2;
 CLONE tile1 subtile3;
 SUBTITLE subtile1 (0,0) 6;
 SUBTITLE subtile2 (2,2) 6;
-SUBTITLE subtile1 (4,4) 6;
-TILECOMB subtile1 subtile2 R;
-TILECOMB subtile1 subtile3 R;
-CreateCanvas newCanvas 18;
-PRINT newCanvas subtile1 (0,0);
+SUBTITLE subtile3 (4,4) 6;
+TILECOMB subtile1 subtile2 D;
+TILECOMB subtile1 subtile3 D;
+CREATECANVAS newCanvas 18;
+
+let i = 0;
+do 
+PRINT newCanvas subtile1 (i,0);
+let i = i + 6;
+while (i < 18);
+
 OUTFILE newCanvas;

@@ -28,6 +28,7 @@ import TileTokens
     CLONE           { TokenClone _ }
     LOAD            { TokenLoad _ }
     SCALE           { TokenScale _ }
+    SIZE            { TokenSize _ } 
     TILECOMB        {TokenTileComb _ }
     TILEAND         { TokenTileAnd _ }
     TILEOR          { TokenTileOr _ }
@@ -96,6 +97,7 @@ ExpCalc : ExpCalc '^' ExpCalc  {Expo $1 $3}
      | ExpCalc '/' ExpCalc  {Div $1 $3}
      | ExpCalc '+' ExpCalc   {Plus $1 $3}
      | ExpCalc '-' ExpCalc   {Minus $1 $3}
+     | SIZE var {GetSize $2}
      | int   {TileInt $1}
      | var   {Get $1}
      | '(' ExpCalc ')'   {$2}
@@ -159,6 +161,7 @@ data ExpCalc
     Div ExpCalc ExpCalc |
     Minus ExpCalc ExpCalc |
     Plus ExpCalc ExpCalc |
+    GetSize TileName |
     TileInt Int |
     Get VarName 
     deriving (Show,Eq)

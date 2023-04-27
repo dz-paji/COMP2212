@@ -1,8 +1,11 @@
-LOAD "tile1.tl";
+LOAD tile1.tl;
+
 new rotatedTile1;
 new rotatedTile2;
 new rotatedTile3;
-new rotatedTile4;
+new scaleTile;
+CREATECANVAS canvas 40; 
+
 CLONE tile1 rotatedTile1;
 CLONE tile1 rotatedTile2;
 CLONE tile1 rotatedTile3;
@@ -11,8 +14,35 @@ ROTATE rotatedTile2 270;
 ROTATE rotatedTile3 180;
 TILECOMB tile1 rotatedTile1 R;
 TILECOMB rotatedTile2 rotatedTile3 R;
-TILECOMB tile1 rotatedTile2 D;
-CreateCanvas canvas 8;      
-PRINT canvas tile1 0 0;
+TILECOMB tile1 rotatedTile2 D;CREATECANVAS
+CLONE tile1 scaleTile;
+SCALE scaleTile 3;
+
+let i = 0;
+do
+PRINT canvas tile1 (i,0);
+let i = i + 8;
+while (i < 40);
+
+let i = 0;
+do
+PRINT canvas tile1 (0,i);
+let i = i + 8;
+while (i < 40);
+
+let i = 0;
+do
+PRINT canvas tile1 (i,32);
+let i = i + 8;
+while (i < 40);
+
+let i = 0;
+do
+PRINT canvas tile1 (32,i);
+let i = i + 8;
+while (i < 40);
+
+PRINT canvas scaleTile (8,8);
+
 OUTFILE canvas;
 

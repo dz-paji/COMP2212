@@ -4,18 +4,17 @@ CREATECANVAS canvas 64;
 new base;
 new base1;
 
-CLONE base tile1;
-CLONE base1 tile2;
+CLONE tile1 base;
+CLONE tile2 base1;
 TILECOMB base tile2 R;
 TILECOMB base1 tile1 R;
 TILECOMB base base1 D;
 
 let i = 0;
 let j = 0;
-do 
-PRINT canvas tile1 (i,j);
-let j = j + 2;
-if j == 64 then let j = 0; let i = i + 2; else let j = j;
-while ( i < 64 );
+do
+PRINT canvas base (i,j);
+if i < 64 then let i = i + 2; else let i = 0;let j = j + 2;
+while (j < 64);
 
 OUTFILE canvas;

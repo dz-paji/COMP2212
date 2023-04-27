@@ -2,18 +2,32 @@ LOAD tile1.tl;
 LOAD tile2.tl;
 LOAD tile3.tl;
 
-NEWTILE negationTile3;
+let n = SIZE tile1;
+CREATECANVAS canvas 50 * n;
+let size = 50 * n;
+
+new negationTile3;
 CLONE tile3 negationTile3;
-!! negationTile3;
+REVERSE negationTile3;
 TILEAND tile1 negationTile3;
 TILEAND tile2 negationTile3;
-new tileLft
-new tileRgt
-CLONE tile1 tileLft
-CLONE tile2 tileRgt
+new tileLft;
+new tileRgt;
+CLONE tile1 tileLft;
+CLONE tile2 tileRgt;
+
 let i = 0;
 let j = 0;
 
-do TILECOMB tileLft tileLft D; for (i; i < 50; let i = i + 1);
+do 
+    if (i + j < 50) then PRINT canvas tileLft (i * n, j * n); let j = j +1; else let j = 0; let i = i + 1; 
+while (i < 25);
 
-do TILECOMB tileRgt tileRgt D; for (j; j < 25; let j = j + 1);
+let i = 25;
+let j = 0;
+
+do 
+    if (j <= i) then PRINT canvas tileRgt (i * n, j * n); let j = j + 1; else let j = 0; let i = i + 1; 
+while (i < 50);
+
+OUTFILE canvas;

@@ -1,40 +1,44 @@
-LOAD tile1.tsl;
+LOAD tile1.tl;
+
+CREATECANVAS canvas 180; 
+
 new reversedTileX;
 new reversedTileY;
 new reversedTileXY;
 new blankTile;
+
 CLONE tile1 blankTile;
-CLONE tile1 blankTile2;
-BLANK blankTile2;
 BLANK blankTile;
 CLONE tile1 reversedTileX;
 CLONE tile1 reversedTileY;
 REFLECTX reversedTileX;
 REFLECTY reversedTileY;
-CLONE reversedTileY reversedTileXY;
-REFLECTX reversedTileXY;
 
+CLONE reversedTileX reversedTileXY;
+REFLECTY reversedTileXY;
 
-TILECOMB tile1 reversedTileX R;
+CREATECANVASTILECOMB tile1 reversedTileY R;
 TILECOMB tile1 blankTile R;
-TILECOMB blankTile2 reversedTileY R;
-TILECOMB blankTile2 reversedTileXY R;
-TILECOMB tile1 blankTile2 D；
+TILECOMB blankTile reversedTileX R;
+TILECOMB blankTile reversedTileXY R;
+TILECOMB tile1 blankTile D;
 
-new copyBaseTileX;
-new copyBaseTileY;
+new copyBaseTile;
+new copyBaseTile1;
 
-CLONE tile1 copyBaseTileX;
+CLONE tile1 copyBaseTile;
+CLONE tile1 copyBaseTile1;
+REFLECTY copyBaseTile1;
+TILECOMB copyBaseTile copyBaseTile1 R;
 
 let i = 0;
-do TILECOMB copyBaseTileX copyBaseTileX R; for (i; i < 10; let i = i + 1);
+let j = 0;
 
-CLONE copyBaseTileX copyBaseTileY;
-let j = 0
-do TILECOMB copyBaseTileY copyBaseTileY D; for (j; j < 30; let j = j + 1);
+do
+PRINT canvas copyBaseTile (i,j);
+if i < 180 then let i = i + 18; else let i = 0;let j = j + 6;
+while (j < 180);
 
-CLONE copyBaseTileY resultTile;
-CreateCanvas canvas 180; 
-PRINT canvas resultTile (0,0);
 OUTFILE canvas;
+
 

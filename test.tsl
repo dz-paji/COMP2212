@@ -1,1 +1,3 @@
 LOAD tile1.tl;
+BLANK tile1;
+OUTFILE tile1;
