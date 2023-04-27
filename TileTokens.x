@@ -35,6 +35,7 @@ $white+       ;
   TIlEOR          { tok (\p s -> TokenTileOr p) }
   SCALE           { tok (\p s -> TokenScale p) }
   PRINT             { tok (\p s -> TokenPrint p) }
+  OUTFILE         { tok (\p s -> TokenOutFile p) }
   CREATECANVAS      { tok (\p s -> TokenCreateCanvas p) }
   SUBTITLE        { tok (\p s -> TokenSubtitle p) }
   \+\+            { tok(\p s -> TokenPlusOne p) }

@@ -1,9 +1,2 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-....
-=======
-LOAD tile;
->>>>>>> fe154e514613a1c3835a42d978cd624811bfc803
-=======
-he.llo
->>>>>>> 0529c0cf3d2018c8e3a861771fd0cf8ad1749774
+LOAD tile1.tl;
+OUTFILE tile1;

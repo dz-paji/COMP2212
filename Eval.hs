@@ -5,7 +5,7 @@ import System.IO.Unsafe (unsafePerformIO)
 
 type Tile = [String]
 data Frame = FAssign TileName Env | FPrint Int | FSeq Exp | FWhile Exp ExpBool
-             | FFor Exp VarName ExpBool Exp | FForInc Exp VarName ExpBool Exp-- TODO: Fix frame
+             | FFor Exp VarName ExpBool Exp | FForInc Exp VarName ExpBool Exp deriving (Show, Eq)-- TODO: Fix frame
 type Kont = [Frame]
 type CEK = (Exp, Env, Kont)
 
@@ -103,7 +103,7 @@ evalExp ((NewTile var), env, kon) = ((Cl var env'), env', kon)
         env' = updateEnv env var []
 
 -- evaluate Output to stdout
-evalExp ((OutFile var), env, kon) | lookupEnv var env == [] = error ("run time error")
+evalExp ((OutFile var), env, kon) | lookupEnv var env == [] = error ("run time error. variable " ++ var ++ " not found")
                                   | otherwise = ((Output var env), env, kon)
 
 -- evaluate print
@@ -179,11 +179,15 @@ evalExp ((TileOr var_name1 var_name2), env, kon) = ((Cl var_name1 env'), env', k
 
 -- evaluate closure
 evalExp ((Cl _ _), env, (FSeq exp):kon) = (exp, env, kon)
+evalExp (a@(Cl _ _), env, kon) = (a, env, kon)
+
+-- evaluate output
+evalExp ((Output var env), env', kon) = ((Output var env), env', kon)
 
 -- evaluate ; (StatSemi and StatSeq)
-evalExp ((StatSemi exp) , env, kon) = (exp, env, kon)
+evalExp ((StatSemi exp), env, kon) = (exp, env, kon)
 evalExp ((StatSeq exp1 exp2), env, kon) = (exp1, env, (FSeq exp2):kon)
-evalExp (v, env, (FSeq exp):kon) | checkTerm v = (exp, env, kon)
+-- evalExp (v, env, (FSeq exp):kon) | checkTerm v = (exp, env, kon)
 
 ---------------------------------
 ------- HELPER FUNCTIONS --------
@@ -200,7 +204,7 @@ readTile file_name =
 escapeMonad a = head a
 -- remove .tsl extension from file name
 removeTslExt :: String -> String
-removeTslExt fileName = (take (length fileName - 4)) fileName
+removeTslExt fileName = (take (length fileName - 3)) fileName
 
 -- REVERSE
 reverseTile :: Tile -> Tile
@@ -351,6 +355,7 @@ checkTerm :: Exp -> Bool
 -- checkTerm (TileTrue) = True
 -- checkTerm (TileFalse) = True
 checkTerm (OutFile _) = True
+checkTerm (Output _ _) = True
 checkTerm (Cl _ _) = True
 checkTerm _ = False
 
@@ -364,3 +369,6 @@ doEval (e, env, kon) = if (e' == e) && (checkTerm e') && (null kon) -- loop unti
         (e', env', kon') = evalExp (e, env, kon)
 
 -- parseExp (OutFile var, env) = snd $ length $ lookupEnv var env
+parseOutput :: Exp -> [String]
+parseOutput (Output var env) = snd $ head $ lookupEnv var env
+parseOutput _ = ["Error: Unexpected line", "Last line of program should be OutFile"]

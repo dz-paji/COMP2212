@@ -15,9 +15,8 @@ all: $(DEPEND) Tsl
 
 # Build an executable for Toy interpreter
 Tsl: $(DEPEND) Tsl.hs
-	ghc Tsl.hs
-
-
+	ghc --make Tsl.hs
+	
 # Generate ML files from a parser definition file
 TileGrammar.hs : TileGrammar.y
 	@rm -f TileGrammar.hs

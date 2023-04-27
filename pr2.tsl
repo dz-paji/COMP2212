@@ -1,4 +1,4 @@
-load "tile1.tl";
+LOAD "tile1.tl";
 NEWTILE rotatedTile;
 CLONE tile1 rotatedTile;
 rotateTile rotatedTile;

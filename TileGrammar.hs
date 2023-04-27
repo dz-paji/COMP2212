@@ -1167,7 +1167,7 @@ data Exp
     IfElse ExpBool Exp Exp  |
     Load String  |              -- String for filename, also as var name
     NewTile TileName  |
-    OutFile TileName  | -- also the exit point
+    OutFile TileName  |            -- also the exit point
     Print TileName TileName ExpCalc ExpCalc  |     -- need coordinates, print tile of first tilename to second tilename
     Reverse TileName |
     Rotate TileName ExpCalc |       -- Int for degree to rotate
