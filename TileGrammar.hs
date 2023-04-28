@@ -6,7 +6,7 @@ import qualified Data.Bits as Bits
 import Control.Applicative(Applicative(..))
 import Control.Monad (ap)
 
--- parser produced by Happy Version 1.19.12
+-- parser produced by Happy Version 1.19.11
 
 data HappyAbsSyn t4 t5 t6
 	= HappyTerminal (Token)
@@ -16,13 +16,13 @@ data HappyAbsSyn t4 t5 t6
 	| HappyAbsSyn6 t6
 
 happyExpList :: Happy_Data_Array.Array Int Int
-happyExpList = Happy_Data_Array.listArray (0,240) ([25600,64510,3,0,0,4,8192,0,0,0,0,0,256,60,64,4097,64,0,0,512,0,0,32768,32716,127,32768,0,0,0,4,0,0,32,0,0,256,0,0,2048,0,0,16384,0,0,0,2,0,0,16,0,0,128,0,0,1024,0,0,8192,0,0,0,1,0,0,8,0,0,64,0,0,0,0,0,4,0,0,32768,0,0,0,4,0,0,32,0,0,256,0,0,3072,16384,0,16,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,12288,0,1,64,0,0,0,6144,0,2048,0,0,128,0,0,0,0,0,56320,7,8,3072,0,0,0,0,0,0,0,0,0,0,0,0,0,16384,0,0,0,15,16400,1024,120,128,8194,25600,64510,3,1536,8192,0,8,0,32768,32783,1,8,512,0,0,0,0,0,8048,1,0,48,8,0,384,0,0,0,0,62240,8159,0,240,256,16388,1920,2048,32,3074,16384,4096,24592,0,32770,128,3,16,1024,24,128,8192,192,1024,0,1537,8192,0,12296,0,1,32832,1,8,512,12,64,4096,0,0,32768,0,0,0,4,0,49152,7,0,0,0,0,0,496,32,0,0,0,0,0,0,0,0,0,0,0,128,3,16,1024,0,0,4032,192,1024,0,1,0,0,8192,0,0,32768,7,8200,512,0,0,992,0,0,0,0,0,0,0,0,0,0,0,0,56,0,0,448,0,0,3968,0,0,31744,3072,16384,0,16,0,0,31,3,16,1024,0,0,0,0,0,0,32768,0,0,4,0,0,0,0,0,0,0,0,9184,12800,65023,1,0,0,63488,0,0,49152,7,0,3072,512,0,0,1024,0,0,8064,384,2048,0,2,0,57344,24611,0,2,128,15,16400,1024,0,0,0,0,0,32768,0,0,96,4,0,32768,32911,1,8,512,0,0,992,0,0,0,36864,61433,15,0,0,0,80,0,0,0,0
+happyExpList = Happy_Data_Array.listArray (0,250) ([25600,64510,3,0,0,4,8192,0,0,0,0,0,256,60,64,4097,64,0,0,512,0,0,32768,32716,127,32768,0,0,0,4,0,0,32,0,0,256,0,0,2048,0,0,16384,0,0,0,2,0,0,16,0,0,128,0,0,1024,0,0,8192,0,0,0,1,0,0,8,0,0,64,0,0,0,0,0,4,0,0,32768,0,0,0,4,0,0,32,0,0,256,0,0,3072,16384,0,16,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,12288,0,1,64,0,0,0,6144,0,2048,0,0,128,0,0,0,0,0,56320,7,8,3072,0,0,0,0,0,0,0,0,0,0,0,0,0,16384,0,0,0,15,16400,1024,120,128,8194,25600,64510,3,1536,8192,0,8,0,32768,32783,1,8,512,0,0,0,0,0,8048,1,0,48,8,0,384,0,0,0,0,62240,8159,0,240,256,16388,1920,2048,32,3074,16384,4096,24592,0,32770,128,3,16,1024,24,128,8192,192,1024,0,1537,8192,0,12296,0,1,32832,1,8,512,12,64,4096,0,0,32768,0,0,0,4,0,49152,7,0,0,0,0,0,496,32,0,0,0,0,0,0,0,0,0,0,0,128,3,16,1024,0,0,4032,192,1024,0,1,0,0,8192,0,0,32768,7,8200,512,0,0,992,0,0,0,0,0,0,0,0,0,0,0,0,56,0,0,448,0,0,3968,0,0,31744,3072,16384,0,16,0,0,31,3,16,1024,0,0,0,0,0,0,32768,0,0,4,0,0,0,0,0,0,0,0,9184,12800,65023,1,0,0,63488,0,0,49152,7,0,3072,512,0,0,1024,0,0,8064,384,2048,0,2,0,57344,24611,0,2,128,15,16400,1024,0,0,0,0,0,32768,0,0,96,4,0,32768,32911,1,8,512,12,64,5088,0,0,0,36864,61433,15,0,0,0,80,0,0,62,0,0,0,0
 	])
 
 {-# NOINLINE happyExpListPerState #-}
 happyExpListPerState st =
     token_strs_expected
-  where token_strs = ["error","%dummy","%start_parseCalc","Exp","ExpCalc","ExpBool","int","var","true","false","if","then","else","new","let","while","for","do","REVERSE","ROTATE","REFLECTX","REFLECTY","BLANK","CLONE","LOAD","SCALE","SIZE","TILECOMB","TILEAND","TILEOR","PRINT","CREATECANVAS","OUTFILE","SUBTITLE","'&&'","'||'","'!!'","'<'","'>'","'=='","'='","'+'","'-'","'*'","'/'","'^'","','","';'","'('","')'","%eof"]
+  where token_strs = ["error","%dummy","%start_parseCalc","Exp","ExpCalc","ExpBool","int","var","true","false","if","then","else","new","let","while","for","do","REVERSE","ROTATE","REFLECTX","REFLECTY","BLANK","CLONE","LOAD","SCALE","SIZE","TILECOMB","TILEAND","TILEOR","PRINT","CREATECANVAS","OUTFILE","SUBTILE","'&&'","'||'","'!!'","'<'","'>'","'=='","'='","'+'","'-'","'*'","'/'","'^'","','","';'","'('","')'","%eof"]
         bit_start = st * 51
         bit_end = (st + 1) * 51
         read_bit = readArrayBit happyExpList
@@ -681,12 +681,17 @@ action_115 (49) = happyShift action_51
 action_115 (5) = happyGoto action_116
 action_115 _ = happyFail (happyExpListPerState 115)
 
+action_116 (7) = happyShift action_41
+action_116 (8) = happyShift action_42
+action_116 (27) = happyShift action_45
 action_116 (42) = happyShift action_63
 action_116 (43) = happyShift action_64
 action_116 (44) = happyShift action_65
 action_116 (45) = happyShift action_66
 action_116 (46) = happyShift action_67
-action_116 _ = happyReduce_15
+action_116 (49) = happyShift action_51
+action_116 (5) = happyGoto action_120
+action_116 _ = happyFail (happyExpListPerState 116)
 
 action_117 _ = happyReduce_10
 
@@ -713,10 +718,17 @@ action_118 (4) = happyGoto action_119
 action_118 _ = happyFail (happyExpListPerState 118)
 
 action_119 (48) = happyShift action_48
-action_119 (50) = happyShift action_120
+action_119 (50) = happyShift action_121
 action_119 _ = happyFail (happyExpListPerState 119)
 
-action_120 _ = happyReduce_20
+action_120 (42) = happyShift action_63
+action_120 (43) = happyShift action_64
+action_120 (44) = happyShift action_65
+action_120 (45) = happyShift action_66
+action_120 (46) = happyShift action_67
+action_120 _ = happyReduce_15
+
+action_121 _ = happyReduce_20
 
 happyReduce_1 = happySpecReduce_3  4 happyReduction_1
 happyReduction_1 (HappyAbsSyn5  happy_var_3)
@@ -844,8 +856,9 @@ happyReduction_14 ((HappyTerminal (TokenVar _ happy_var_4)) `HappyStk`
 		 (TileComb happy_var_2 happy_var_3 happy_var_4
 	) `HappyStk` happyRest
 
-happyReduce_15 = happyReduce 8 4 happyReduction_15
-happyReduction_15 ((HappyAbsSyn5  happy_var_8) `HappyStk`
+happyReduce_15 = happyReduce 9 4 happyReduction_15
+happyReduction_15 ((HappyAbsSyn5  happy_var_9) `HappyStk`
+	(HappyAbsSyn5  happy_var_8) `HappyStk`
 	_ `HappyStk`
 	(HappyAbsSyn5  happy_var_6) `HappyStk`
 	_ `HappyStk`
@@ -855,7 +868,7 @@ happyReduction_15 ((HappyAbsSyn5  happy_var_8) `HappyStk`
 	_ `HappyStk`
 	happyRest)
 	 = HappyAbsSyn4
-		 (Subtitle happy_var_2 happy_var_4 happy_var_6 happy_var_8
+		 (Subtile happy_var_2 happy_var_4 happy_var_6 happy_var_8 happy_var_9
 	) `HappyStk` happyRest
 
 happyReduce_16 = happySpecReduce_2  4 happyReduction_16
@@ -1136,7 +1149,7 @@ happyNewToken action sts stk (tk:tks) =
 	TokenPrint _ -> cont 31;
 	TokenCreateCanvas _ -> cont 32;
 	TokenOutFile _ -> cont 33;
-	TokenSubtitle _ -> cont 34;
+	TokenSubtile _ -> cont 34;
 	TokenAnd _ -> cont 35;
 	TokenOr _ -> cont 36;
 	TokenNegation _ -> cont 37;
@@ -1215,7 +1228,7 @@ data Exp
     ReflectX TileName  |
     ReflectY TileName  |      
     Scale TileName ExpCalc  |    
-    Subtitle TileName ExpCalc ExpCalc ExpCalc  |           -- need coordinates params: varname, x, y, size
+    Subtile TileName ExpCalc ExpCalc ExpCalc ExpCalc  |           -- need coordinates params: varname, x, y, size
     TileComb TileName TileName String |   -- String for direction U | D | R | L
     TileAnd TileName TileName |
     TileOr TileName TileName |
@@ -1250,7 +1263,19 @@ data ExpBool
     TileFalse  
     deriving (Show,Eq)
 {-# LINE 1 "templates/GenericTemplate.hs" #-}
--- $Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp $
+{-# LINE 1 "templates/GenericTemplate.hs" #-}
+{-# LINE 1 "<built-in>" #-}
+{-# LINE 1 "<command-line>" #-}
+
+
+
+
+
+
+
+# 1 "/usr/include/stdc-predef.h" 1 3 4
+
+# 17 "/usr/include/stdc-predef.h" 3 4
 
 
 
@@ -1292,6 +1317,232 @@ data ExpBool
 
 
 
+
+
+{-# LINE 7 "<command-line>" #-}
+{-# LINE 1 "/usr/lib/ghc/include/ghcversion.h" #-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{-# LINE 7 "<command-line>" #-}
+{-# LINE 1 "/tmp/ghc8336_0/ghc_2.h" #-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{-# LINE 7 "<command-line>" #-}
+{-# LINE 1 "templates/GenericTemplate.hs" #-}
+-- Id: GenericTemplate.hs,v 1.26 2005/01/14 14:47:22 simonmar Exp 
+
+
+
+
+
+
+
+
+
+{-# LINE 43 "templates/GenericTemplate.hs" #-}
 
 data Happy_IntList = HappyCons Int Happy_IntList
 
@@ -1301,38 +1552,11 @@ data Happy_IntList = HappyCons Int Happy_IntList
 
 
 
+{-# LINE 65 "templates/GenericTemplate.hs" #-}
 
+{-# LINE 75 "templates/GenericTemplate.hs" #-}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{-# LINE 84 "templates/GenericTemplate.hs" #-}
 
 infixr 9 `HappyStk`
 data HappyStk a = HappyStk a (HappyStk a)
@@ -1345,7 +1569,7 @@ happyParse start_state = happyNewToken start_state notHappyAtAll notHappyAtAll
 -----------------------------------------------------------------------------
 -- Accepting the parse
 
--- If the current token is ERROR_TOK, it means we've just accepted a partial
+-- If the current token is (1), it means we've just accepted a partial
 -- parse (a %partial parser).  We must ignore the saved token on the top of
 -- the stack in this case.
 happyAccept (1) tk st sts (_ `HappyStk` ans `HappyStk` _) =
@@ -1356,46 +1580,9 @@ happyAccept j tk st sts (HappyStk ans _) =
 -----------------------------------------------------------------------------
 -- Arrays only: do the next action
 
+{-# LINE 137 "templates/GenericTemplate.hs" #-}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+{-# LINE 147 "templates/GenericTemplate.hs" #-}
 indexShortOffAddr arr off = arr Happy_Data_Array.! off
 
 
@@ -1508,19 +1695,12 @@ happyDropStk n (x `HappyStk` xs) = happyDropStk (n - ((1)::Int)) xs
 -----------------------------------------------------------------------------
 -- Moving to a new state after a reduction
 
-
-
-
-
-
-
-
-
+{-# LINE 267 "templates/GenericTemplate.hs" #-}
 happyGoto action j tk st = action j j tk (HappyState action)
 
 
 -----------------------------------------------------------------------------
--- Error recovery (ERROR_TOK is the error token)
+-- Error recovery ((1) is the error token)
 
 -- parse error if we are in recovery and we fail again
 happyFail explist (1) tk old_st _ stk@(x `HappyStk` _) =
@@ -1533,17 +1713,17 @@ happyFail explist (1) tk old_st _ stk@(x `HappyStk` _) =
     for now --SDM
 
 -- discard a state
-happyFail  ERROR_TOK tk old_st CONS(HAPPYSTATE(action),sts) 
+happyFail  (1) tk old_st (((HappyState (action))):(sts)) 
                                                 (saved_tok `HappyStk` _ `HappyStk` stk) =
 --      trace ("discarding state, depth " ++ show (length stk))  $
-        DO_ACTION(action,ERROR_TOK,tk,sts,(saved_tok`HappyStk`stk))
+        action (1) (1) tk (HappyState (action)) sts ((saved_tok`HappyStk`stk))
 -}
 
 -- Enter error recovery: generate an error token,
 --                       save the old token and carry on.
 happyFail explist i tk (HappyState (action)) sts stk =
 --      trace "entering error recovery" $
-        action (1) (1) tk (HappyState (action)) sts ((HappyErrorToken (i)) `HappyStk` stk)
+        action (1) (1) tk (HappyState (action)) sts ( (HappyErrorToken (i)) `HappyStk` stk)
 
 -- Internal happy errors:
 
@@ -1574,14 +1754,7 @@ happyDontSeq a b = b
 -- of deciding to inline happyGoto everywhere, which increases the size of
 -- the generated parser quite a bit.
 
-
-
-
-
-
-
-
-
+{-# LINE 333 "templates/GenericTemplate.hs" #-}
 {-# NOINLINE happyShift #-}
 {-# NOINLINE happySpecReduce_0 #-}
 {-# NOINLINE happySpecReduce_1 #-}

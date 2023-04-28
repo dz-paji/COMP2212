@@ -38,7 +38,7 @@ $white+       ;
   PRINT             { tok (\p s -> TokenPrint p) }
   OUTFILE         { tok (\p s -> TokenOutFile p) }
   CREATECANVAS      { tok (\p s -> TokenCreateCanvas p) }
-  SUBTITLE        { tok (\p s -> TokenSubtitle p) }
+  SUBTILE        { tok (\p s -> TokenSubtile p) }
   \+\+            { tok(\p s -> TokenPlusOne p) }
   \-\-            { tok (\p s -> TokenMinusOne p) }
   \&\&             { tok (\p s -> TokenAnd p) }
@@ -94,7 +94,7 @@ data Token =
   TokenTileOr  AlexPosn    |
   TokenCreateCanvas AlexPosn |
   TokenOutFile AlexPosn    |
-  TokenSubtitle AlexPosn   |
+  TokenSubtile AlexPosn    |
   TokenAnd AlexPosn        |
   TokenOr AlexPosn         |
   TokenNegation AlexPosn   |
@@ -140,7 +140,7 @@ tokenPosn (TokenSize (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTileComb (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTileAnd (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenTileOr (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
-tokenPosn (TokenSubtitle (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
+tokenPosn (TokenSubtile (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPrint (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenPlusOne (AlexPn a l c)) = show(l) ++ ":" ++ show(c)
 tokenPosn (TokenMinusOne (AlexPn a l c)) = show(l) ++ ":" ++ show(c)

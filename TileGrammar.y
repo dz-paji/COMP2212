@@ -29,13 +29,13 @@ import TileTokens
     LOAD            { TokenLoad _ }
     SCALE           { TokenScale _ }
     SIZE            { TokenSize _ } 
-    TILECOMB        {TokenTileComb _ }
+    TILECOMB        { TokenTileComb _ }
     TILEAND         { TokenTileAnd _ }
     TILEOR          { TokenTileOr _ }
     PRINT           { TokenPrint _ }
     CREATECANVAS    { TokenCreateCanvas _ }
     OUTFILE         { TokenOutFile _ }
-    SUBTITLE        { TokenSubtitle _ }
+    SUBTILE        { TokenSubtile _ }
     '&&'            { TokenAnd _ }
     '||'            { TokenOr _ }
     '!!'            { TokenNegation _ } 
@@ -81,7 +81,7 @@ Exp : CREATECANVAS var ExpCalc {CreateCanvas $2 $3}
     | TILEAND  var var  {TileAnd $2 $3}
     | TILEOR var var    {TileOr $2 $3}
     | TILECOMB var var var  {TileComb $2 $3 $4}
-    | SUBTITLE var '('ExpCalc ',' ExpCalc ')' ExpCalc  {Subtitle $2 $4 $6 $8}
+    | SUBTILE var '('ExpCalc ',' ExpCalc ')' ExpCalc ExpCalc  {Subtile $2 $4 $6 $8 $9}
     | new var    {NewTile $2}
     | let var '=' ExpCalc  {Assign $2 $4}
     | if ExpBool then Exp else Exp  {IfElse $2 $4 $6} 
@@ -144,7 +144,7 @@ data Exp
     ReflectX TileName  |
     ReflectY TileName  |      
     Scale TileName ExpCalc  |    
-    Subtitle TileName ExpCalc ExpCalc ExpCalc  |           -- need coordinates params: varname, x, y, size
+    Subtile TileName ExpCalc ExpCalc ExpCalc ExpCalc  |           -- need coordinates params: varname, x, y, size
     TileComb TileName TileName String |   -- String for direction U | D | R | L
     TileAnd TileName TileName |
     TileOr TileName TileName |

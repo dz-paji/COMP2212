@@ -142,13 +142,14 @@ evalExp ((ReflectY var), env, kon) = ((Cl var env'), env', kon)
         env' = updateEnv env var (reflectYTile value)
 
 -- evaluate subtitle
-evalExp ((Subtitle var_name x_expr y_expr multiplier_expr), env, kon) = ((Cl var_name env'), env', kon)
+evalExp ((Subtile var_name x_expr y_expr length_x_expr length_y_expr), env, kon) = ((Cl var_name env'), env', kon)
     where
         var_value = snd $ head $ (lookupEnv var_name env)
         x_value = fst $ evalCalc (x_expr, env)
         y_value = fst $ evalCalc (y_expr, env)
-        multiplier_value = fst $ evalCalc (multiplier_expr, env)
-        env' = updateEnv env var_name (subtitleTile var_value (x_expr, y_expr) multiplier_expr env)
+        length_x_value = fst $ evalCalc (length_x_expr, env)
+        length_y_value = fst $ evalCalc (length_y_expr, env)
+        env' = updateEnv env var_name (subtile var_value (x_value, y_value) length_x_value length_y_value env)
 
 -- evaluate scale
 evalExp ((Scale var calc_expr), env, kon) = ((Cl var env'), env', kon)
@@ -244,12 +245,8 @@ reflectYTile = map reverse
 -- cloneTile :: Tile -> Tile
 -- clone tile = tile
 
-subtitleTile :: Tile -> (ExpCalc,ExpCalc) -> ExpCalc -> Env -> Tile
-subtitleTile tile (x_exp,y_exp) n_exp env = map (take n . drop x) $ (take n . drop y) tile
-    where
-        x = fst $ evalCalc (x_exp, env)
-        y = fst $ evalCalc (y_exp, env)
-        n = fst $ evalCalc (n_exp, env)
+subtile :: Tile -> (Int,Int) -> Int -> Int -> Env -> Tile
+subtile tile (x,y) n m env = map (take n . drop x) $ (take m . drop y) tile
 
 -- TILEAND
 andTile :: Tile -> Tile -> Tile
