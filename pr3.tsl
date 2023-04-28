@@ -17,7 +17,7 @@ REFLECTY reversedTileY;
 CLONE reversedTileX reversedTileXY;
 REFLECTY reversedTileXY;
 
-CREATECANVASTILECOMB tile1 reversedTileY R;
+TILECOMB tile1 reversedTileY R;
 TILECOMB tile1 blankTile R;
 TILECOMB blankTile reversedTileX R;
 TILECOMB blankTile reversedTileXY R;

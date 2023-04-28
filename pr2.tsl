@@ -14,7 +14,7 @@ ROTATE rotatedTile2 270;
 ROTATE rotatedTile3 180;
 TILECOMB tile1 rotatedTile1 R;
 TILECOMB rotatedTile2 rotatedTile3 R;
-TILECOMB tile1 rotatedTile2 D;CREATECANVAS
+TILECOMB tile1 rotatedTile2 D;
 CLONE tile1 scaleTile;
 SCALE scaleTile 3;
 

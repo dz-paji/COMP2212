@@ -11,12 +11,8 @@ main = catch main' errorHandler
 
 main' = do {(fileName : _ ) <- getArgs 
            ; source <- readFile fileName
-           ; putStrLn ("Parsing : " ++ source)
            ; let parsed = parseCalc (alexScanTokens source)
-        --    let parsed =  alexScanTokens source
-           ; putStrLn ("Parsed as " ++ (show parsed))
            ; let result = letsEval parsed
-           ; putStrLn ("Result = ")
            ; mapM_ putStrLn ( parseOutput result)}
 
 errorHandler :: ErrorCall -> IO ()
