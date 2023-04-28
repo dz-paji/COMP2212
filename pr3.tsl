@@ -36,7 +36,7 @@ let j = 0;
 
 do
 PRINT canvas copyBaseTile (i,j);
-if i < 180 then let i = i + 18; else let i = 0;let j = j + 6;
+if i < 162 then let i = i + 18; else let i = 0;let j = j + 6;
 while (j < 180);
 
 OUTFILE canvas;

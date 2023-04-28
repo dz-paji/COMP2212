@@ -14,7 +14,7 @@ let i = 0;
 let j = 0;
 do
 PRINT canvas base (i,j);
-if i < 64 then let i = i + 2; else let i = 0;let j = j + 2;
+if i < 62 then let i = i + 2; else let i = 0;let j = j + 2;
 while (j < 64);
 
 OUTFILE canvas;
