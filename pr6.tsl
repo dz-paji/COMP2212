@@ -1,0 +1,33 @@
+LOAD tile1.tl;
+LOAD tile2.tl;
+LOAD tile3.tl;
+CLONE tile1 blankTile;
+BLANK blankTile;
+
+let n = SIZE tile1;
+CREATECANVAS newCanvas n*60;
+
+
+
+let i = 2;
+let j = 0;
+do
+    PRINT newCanvas tile1 (i,j);
+    if (i < 180) then let i = i+3; else let i = 0; let j = j + 1;
+while (j < 180);
+
+let i = 1;
+let j = 0;
+do
+    PRINT newCanvas tile2 (i,j);
+    if (i < ) then let i = i+3; else let i = 0; let j = j+1;
+while (j < n);
+
+let i = 0;
+let j = 0;
+do
+    PRINT newCanvas tile3 (i,j);
+    if (i < 180) then let i = i+3; else let i = 0; let j = j+1;
+while (j < n);
+
+OUTFILE newCanvas;
