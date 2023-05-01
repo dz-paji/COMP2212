@@ -38,7 +38,7 @@ let i = 0;
 do
 TILECOMB set2 setbase2 R;
 let i = i+1;
-while (i<20);
+while (i<19);
 
 new set3;
 CLONE tile3 set3;
@@ -52,23 +52,24 @@ let i = 0;
 do
 TILECOMB set3 setbase3 R;
 let i = i+1;
-while (i<20);
+while (i<19);
 
-TILECOMB set3 set2 D;
-TILECOMB set3 set1 D;
+
+TILECOMB set2 set1 D;
+TILECOMB set2 set3 D;
 new setbaseV;
-CLONE set3 setbaseV;
+CLONE set2 setbaseV;
 
 let i = 0;
 do
-TILECOMB set3 setbaseV D;
+TILECOMB set2 setbaseV D;
 let i = i+1;
 while (i<20);
 
 
-PRINT newCanvas set3 (0,0);
+PRINT newCanvas set2 (0,0);
 PRINT newCanvas blankTile2 (0,0);
 PRINT newCanvas blankTile1 (0,3);
-PRINT newCanvas blankTile2 (177,180);
-PRINT newCanvas blankTile1 (180,177);
+PRINT newCanvas blankTile2 (174,177);
+PRINT newCanvas blankTile1 (177,174);
 OUTFILE newCanvas;
