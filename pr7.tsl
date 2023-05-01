@@ -1,0 +1,24 @@
+LOAD tile61.tl;
+CLONE tile61 tileQ;
+CLONE tile61 tileQX;
+CLONE tile61 tileQY;
+REFLECTX tileQX;
+REFLECTY tileQY;
+CLONE tileQY tileQXY;
+REFLECTX tileQXY;
+
+TILECOMB tileQ tileQY R;
+TILECOMB tileQX tileQXY R;
+
+TILECOMB tileQ tileQX D;
+
+
+let size = 98
+do
+SCALE tileQ size;
+for (size; (size > 0); size = size - 2);
+
+let n = SIZE tileQ;
+CREATECANVAS canvas n;
+PRINT canvas tileQ (0,0);
+OUTFILE canvas;
