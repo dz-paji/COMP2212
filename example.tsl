@@ -4,8 +4,9 @@ let k = 0;
 
 do
     do
-        let k = k + 1;
-    for (i; i < 5; let i = i + 1);
-for (j; j < 6; let j = j + 1);
+        let i = i + 1;
+    for (i; i < 10; let i = i + 1);
+    let j = j + 1;
+for (j; j < 5; let j = j + 1);
 
-OUTFILE i
+OUTFILE i;

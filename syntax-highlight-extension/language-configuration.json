@@ -1,0 +1,7 @@
+{
+    // symbols that can be used to surround a selection
+    "surroundingPairs": [
+        ["do", "for"],
+        ["do", "while"]
+    ]
+}
