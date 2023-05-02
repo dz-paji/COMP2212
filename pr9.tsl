@@ -1,0 +1,38 @@
+LOAD tile1.tl;
+let n = SIZE tile1;
+CREATECANVAS base n*101;
+CREATECANVAS newbase n*101;
+
+
+let i = 0;
+let j = 0;
+
+do
+    do
+    if (i*2<j) then PRINT base tile1 (i,j); else new hello;
+    for(i;i<303; let i=i+3);
+let i = 0;
+for(j; j<303; let j = j+3);
+
+--hello
+CLONE base newCanvasR;
+REFLECTY newCanvasR;
+
+CLONE base newCanvasU;
+ROTATE newCanvasU 270;
+REFLECTX newCanvasU;
+
+CLONE newCanvasU newCanvasD;
+REFLECTX newCanvasD;
+
+TIlEOR base newCanvasR;
+TIlEOR newCanvasU newCanvasD;
+CLONE base baseCopy;
+CLONE newCanvasU Ucopy;
+
+TIlEOR baseCopy Ucopy;
+TILEAND base newCanvasU;
+REVERSE base;
+TILEAND base baseCopy;
+
+OUTFILE base;

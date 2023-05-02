@@ -1,0 +1,10 @@
+LOAD tile1.tl;
+LOAD tile2.tl;
+let n = SIZE tile1;
+CREATECANVAS newcanvas n;
+
+PRINT newcanvas tile1 (0,0);
+PRINT newcanvas tile2 (12,12);
+
+
+OUTFILE newcanvas;
