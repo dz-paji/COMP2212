@@ -1,0 +1,63 @@
+{
+	"$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+	"name": "Tsl",
+	"patterns": [
+		{
+			"include": "#keywords"
+		},
+		{
+			"include": "#storage"
+		},
+		{
+			"include": "#numeric"
+		},
+		{
+			"include": "#directions"
+		},
+		{
+			"include": "#loops"
+		},
+		{
+			"include": "#selections"
+		}
+	],
+	"repository": {
+		"keywords": {
+			"patterns": [{
+				"name": "keyword.control.tsl",
+				"match": "\\b(REVERSE|TILEAND|TILEOR|TILECOMB|BLANK|SCALE|ROTATE|REFLECTX|REFLECTY|OUTFILE|TILECOMB|let|PRINT)\\b"
+			}]
+		},
+		"storage": {
+			"patterns": [{
+				"name": "storage.control.tsl",
+				"match": "\\b(LOAD|new|CREATECANVAS|CLONE|SUBTILE)\\b"
+			}]
+		},
+		"numeric": {
+			"patterns": [{
+				"name": "constant.numeric.tsl",
+				"match": "\\b(\\d+)\\b"
+			}]
+		},
+		"directions": {
+			"patterns": [{
+				"name": "entity.name.type.tsl",
+				"match": "\\b(R|D|L|F)\\b"
+			}]
+		},
+		"loops": {
+			"patterns": [{
+				"name": "entity.name.function.tsl",
+				"match": "\\b(do|while|for)\\b"
+			}]
+		},
+		"selections": {
+			"patterns": [{
+				"name": "entity.name.function.tsl",
+				"match": "\\b(if|then|else)\\b"
+			}]
+		}
+	},
+	"scopeName": "source.tsl"
+}
