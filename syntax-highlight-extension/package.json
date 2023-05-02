@@ -1,7 +1,8 @@
 {
   "name": "tsl-highlight",
   "displayName": "Tsl-Highlight",
-  "description": "Highlight keywords for our dsl",
+  "description": "Highlight keywords for COMP2212 dsl",
+  "publisher": "paji",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.77.0"
