@@ -1,11 +1,7 @@
-LOAD tile91.tl;
-let n = SIZE tile91;
+LOAD tile1.tl;
+let n = SIZE tile1;
 CREATECANVAS base n*101;
 CREATECANVAS newbase n*101;
-
-CLONE tile91 tile1;
-
-
 
 
 let i = 0;
