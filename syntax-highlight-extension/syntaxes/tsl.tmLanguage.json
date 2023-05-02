@@ -55,7 +55,7 @@
 		"selections": {
 			"patterns": [{
 				"name": "entity.name.function.tsl",
-				"match": "\\b(if|else)\\b"
+				"match": "\\b(if|then|else)\\b"
 			}]
 		}
 	},
