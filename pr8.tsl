@@ -1,0 +1,111 @@
+LOAD tile81.tl;
+LOAD tile82.tl;
+let n = SIZE tile81;
+
+CREATECANVAS canvas n*40;
+--
+
+CLONE tile81 tile1X;
+REFLECTX tile1X;
+
+CLONE tile82 tile2X;
+REFLECTX tile2X;
+
+CLONE tile82 tile2Doubld;
+CLONE tile2X tile2DoubldX;
+SCALE tile2Doubld 2;
+SCALE tile2DoubldX 2;
+
+CLONE tile81 tile1copy;
+CLONE tile82 tile2copy;
+CLONE tile1X tile1Xcopy;
+CLONE tile2X tile2Xcopy;
+CLONE tile2Doubld tile2Doubldcopy;
+CLONE tile2DoubldX tile2DoubldXcopy;
+
+new tileLeft;
+CLONE tile1Xcopy tileLeft;
+TILECOMB tileLeft tile1Xcopy R;
+TILECOMB tileLeft tile2Xcopy R;
+
+new tileLeft2;
+CLONE tile1Xcopy tileLeft2;
+TILECOMB tileLeft2 tile2copy D;
+TILECOMB tileLeft2 tile2Doubldcopy R;
+
+new tileLeft3;
+CLONE tile2Xcopy tileLeft3;
+TILECOMB tileLeft3 tile1copy D;
+TILECOMB tileLeft3 tile2DoubldXcopy R;
+
+TILECOMB tileLeft tileLeft2 D;
+TILECOMB tileLeft tileLeft3 D;
+
+--
+new tileRight1;
+CLONE tile2Xcopy tileRight1;
+TILECOMB tileRight1 tile1copy D;
+TILECOMB tileRight1 tile2DoubldXcopy L;
+TILECOMB tileRight1 tile2DoubldXcopy L;
+
+new tileRight2;
+CLONE tile2Xcopy tileRight2;
+TILECOMB tileRight2 tile1copy D;
+TILECOMB tileRight2 tile1copy D;
+--
+new tileRight3;
+CLONE tile1copy tileRight3;
+TILECOMB tileRight3 tile2copy R;
+TILECOMB tileRight3 tile2DoubldXcopy U;
+
+new tileRight4;
+CLONE tile1copy tileRight4;
+TILECOMB tileRight4 tile1copy R;
+TILECOMB tileRight4 tile2Doubldcopy D;
+-----
+TILECOMB tileRight2 tileRight3 R;
+TILECOMB tileRight2 tileRight4 R;
+TILECOMB tileRight1 tileRight2 D;
+
+TILECOMB tileLeft tileRight1 R;
+CLONE tileLeft tileBase;
+
+-----all correct above
+-----problem at REFLECTX fucntion below
+CLONE tileBase tileBaseX;
+CLONE tileBase tileBaseY;
+REFLECTX tileBaseX;
+REFLECTY tileBaseY;
+CLONE tileBaseY tileBaseXY;
+REFLECTX tileBaseXY;
+
+CLONE tileBaseX tileBaseXcopy;
+CLONE tileBaseY tileBaseYcopy;
+CLONE tileBaseXY tileBaseXYcopy;
+
+TILECOMB tileBase tileBaseY R;
+TILECOMB tileBaseX tileBaseXY R;
+TILECOMB tileBase tileBaseX D;
+CLONE tileBase tileBaseCopy;
+
+
+TILECOMB tileBase tileBaseCopy D;
+TILECOMB tileBase tileBaseCopy D;
+TILECOMB tileBase tileBaseCopy D;
+TILECOMB tileBase tileBase R;
+
+new tileBaseR;
+CLONE tileLeft tileBaseR;
+TILECOMB tileBaseR tileBaseYcopy D;
+
+CLONE tileBaseR tileBaseRcopy;
+TILECOMB tileBaseR tileBaseRcopy D;
+TILECOMB tileBaseR tileBaseRcopy D;
+TILECOMB tileBaseR tileBaseRcopy D;
+TILECOMB tileBaseR tileBaseRcopy D;
+
+TILECOMB tileBase tileBaseR R;
+
+PRINT canvas tileBase (0,0);
+
+OUTFILE canvas;

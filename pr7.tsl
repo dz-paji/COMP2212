@@ -1,9 +1,12 @@
-LOAD tile61.tl;
-CLONE tile61 tileQ;
-CLONE tile61 tileQX;
-CLONE tile61 tileQY;
-let n = SIZE tile61;
-CREATECANVAS canvas n*200;
+LOAD tile1.tl;
+CLONE tile1 tileQ;
+CLONE tile1 tileQX;
+CLONE tile1 tileQY;
+let n = SIZE tile1;
+CREATECANVAS canvasOut n*200;
+CREATECANVAS canvasOp1 n*200;
+CREATECANVAS canvasOp2 n*200;
+
 REFLECTX tileQX;
 REFLECTY tileQY;
 CLONE tileQY tileQXY;
@@ -12,35 +15,29 @@ REFLECTX tileQXY;
 TILECOMB tileQ tileQY R;
 TILECOMB tileQX tileQXY R;
 TILECOMB tileQ tileQX D;
-CLONE tileQ tileOR;
-REVERSE tileOR;
 
-CLONE tileQ tileQ1;
-CLONE tileOR tileOR1;
+let s1 = 100;
+let s2 = 98;
 
-
-let size = 100;
-let i = 0;
-let j = 0;
-do
-CLONE tileQ1 tileQ;
-SCALE tileQ size;
-PRINT canvas tileQ (i,j);
-let size = size - 4; 
-let i = i+8; 
-let j= j+8;
-while( size > 0);
-
-
-let size = 98;
-let i = 4;
-let j = 4;
+let i =0;
+let j =0;
 
 do
-CLONE tileOR1 tileOR;
-SCALE tileOR size;
-PRINT canvas tileOR (i,j);
-let size = size - 4; let i = i+8; let j= j+8;
-while (size > 0 );
+    SCALE tileQ s1;
+    PRINT tileQ canvasOp1 (i,j);
+    SCALE tileQ1 s2;
+    PRINT tileQ canvasOp2 (i+4,j+4);
 
-OUTFILE tileQ1;
+    CLONE canvasOp1 canvasOp11;
+    CLONE canvasOp2 canvasOp21;
+
+    TIlEOR canvasOp11 canvasOp21;
+    TILEAND canvasOp1 canvasOp2;
+    REVERSE canvasOp1;
+    TILEAND testCanvas1 canvasOp11;
+while (s2 >1);
+
+
+
+
+OUTFILE testCanvas1;
