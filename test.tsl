@@ -1,25 +1,54 @@
-LOAD tile91.tl;
-let n = SIZE tile91;
-CREATECANVAS base 60;
-CREATECANVAS newCanvasL n*101;
-CREATECANVAS newCanvasR n*101;
-CREATECANVAS newCanvasU n*101;
-CREATECANVAS newCanvasD n*101;
-CREATECANVAS newbase n*101;
+LOAD tile1.tl;
+CLONE tile1 tileQ;
+CLONE tile1 tileQX;
+CLONE tile1 tileQY;
+let n = SIZE tile1;
+CREATECANVAS canvasOut n*40;
+CREATECANVAS canvasOp1 n*40;
+CREATECANVAS canvasOp2 n*40;
+CREATECANVAS canvasOp11 n*40;
+CREATECANVAS canvasOp21 n*40;
+CREATECANVAS canvasClean n*40;
 
-CLONE tile91 tile1;
 
+REFLECTX tileQX;
+REFLECTY tileQY;
+CLONE tileQY tileQXY;
+REFLECTX tileQXY;
+
+TILECOMB tileQ tileQY R;
+TILECOMB tileQX tileQXY R;
+TILECOMB tileQ tileQX D;
+
+
+let s1=20;
+let s2=18;
 let i = 0;
 let j = 0;
-
 do
-    do
-    if (i*2<j) then PRINT base tile1 (i,j); else new hello;
-    for(i;i<60; let i=i+3);
-let i = 0;
-for(j; j<60; let j = j+3);
+CLONE tileQ tileQ1;
+CLONE tileQ tileQ2;
+SCALE tileQ1 s1;
+SCALE tileQ2 s2;
+let s1 = s1-2;
+let s2 = s2-2;
+PRINT canvasOp1 tileQ1 (i,j);
+PRINT canvasOp2 tileQ2 (i+4,j+4);
+let i = i+4;
+let j = j+4;
+CLONE canvasOp1 canvasOp11;
+CLONE canvasOp2 canvasOp21;
 
-CLONE base newbase;
-REFLECTY newbase
+TIlEOR canvasOp11 canvasOp21;
+TILEAND canvasOp1 canvasOp2;
+REVERSE canvasOp1;
+TILEAND canvasOp1 canvasOp11;
+TIlEOR canvasOut canvasOp1;
 
-OUTFILE newbase;
+CLONE canvasClean canvasOp1;
+CLONE canvasClean canvasOp2;
+CLONE canvasClean canvasOp11;
+CLONE canvasClean canvasOp21;
+while(s2>1);
+
+OUTFILE canvasOut;
