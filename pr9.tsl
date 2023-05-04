@@ -3,15 +3,16 @@ let n = SIZE tile1;
 CREATECANVAS base n*101;
 CREATECANVAS newbase n*101;
 
+TILECOMB tile1 tile1 D;
 new tile2;
 CLONE tile1 tile2;
 
-let j = 0;
+let j = 3;
 do
     PRINT base tile2 (0,j); 
-    TILECOMB tile1 tile2 L;
-    let j = j + n;
-while (j < 100 * n);
+    TILECOMB tile2 tile1 R;
+    let j = j + n + n;
+while (j < 101 * n);
 
 CLONE base newCanvasR;
 REFLECTY newCanvasR;
@@ -34,3 +35,4 @@ REVERSE base;
 TILEAND base baseCopy;
 
 OUTFILE base;
+
