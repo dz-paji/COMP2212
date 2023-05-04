@@ -1,0 +1,75 @@
+LOAD tile1.tl;
+LOAD tile2.tl;
+LOAD tile3.tl;
+let n = SIZE tile1;
+CREATECANVAS newCanvas n*60;
+
+
+new blankTile1;
+new blankTile2;
+CLONE tile1 blankTile1;
+CLONE tile1 blankTile2;
+BLANK blankTile1;
+BLANK blankTile2;
+TILECOMB blankTile2 blankTile2 R;
+
+new set1;
+CLONE tile1 set1;
+TILECOMB set1 tile2 R;
+TILECOMB set1 tile3 R;
+new setbase1;
+CLONE set1 setbase1;
+
+
+let i = 0;
+do
+TILECOMB set1 setbase1 R;
+let i = i+1;
+while (i<(60/3)-1);
+
+new set2;
+CLONE tile2 set2;
+TILECOMB set2 tile3 R;
+TILECOMB set2 tile1 R;
+new setbase2;
+CLONE set2 setbase2;
+
+let i = 0;
+do
+TILECOMB set2 setbase2 R;
+let i = i+1;
+while (i<(60/3)-1);
+
+new set3;
+CLONE tile3 set3;
+TILECOMB set3 tile1 R;
+TILECOMB set3 tile2 R;
+new setbase3;
+CLONE set3 setbase3;
+
+
+let i = 0;
+do
+TILECOMB set3 setbase3 R;
+let i = i+1;
+while (i<(60/3)-1);
+
+
+TILECOMB set2 set1 D;
+TILECOMB set2 set3 D;
+new setbaseV;
+CLONE set2 setbaseV;
+
+let i = 0;
+do
+TILECOMB set2 setbaseV D;
+let i = i+1;
+while (i< (60/3));
+
+
+PRINT newCanvas set2 (0,0);
+PRINT newCanvas blankTile2 (0,0);
+PRINT newCanvas blankTile1 (0,n);
+PRINT newCanvas blankTile2 ((n*60)-2*n,(n*60)-n);
+PRINT newCanvas blankTile1 ((n*60)-n,(n*60)-2*n);
+OUTFILE newCanvas;

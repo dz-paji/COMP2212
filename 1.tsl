@@ -1,0 +1,31 @@
+
+let j = 3;
+do
+    PRINT base tile2 (0,j); 
+    TILECOMB tile1 tile2 R;
+    let j = j + n + n;
+while (j < 101 * n);
+
+
+
+CLONE base newCanvasR;
+REFLECTY newCanvasR;
+
+CLONE base newCanvasU;
+ROTATE newCanvasU 270;
+REFLECTX newCanvasU;
+
+CLONE newCanvasU newCanvasD;
+REFLECTX newCanvasD;
+
+TIlEOR base newCanvasR;
+TIlEOR newCanvasU newCanvasD;
+CLONE base baseCopy;
+CLONE newCanvasU Ucopy;
+
+TIlEOR baseCopy Ucopy;
+TILEAND base newCanvasU;
+REVERSE base;
+TILEAND base baseCopy;
+
+OUTFILE base;

@@ -1,0 +1,20 @@
+LOAD tile1.tl;
+LOAD tile2.tl;
+CREATECANVAS canvas 64;
+new base;
+new base1;
+
+CLONE tile1 base;
+CLONE tile2 base1;
+TILECOMB base tile2 R;
+TILECOMB base1 tile1 R;
+TILECOMB base base1 D;
+
+let i = 0;
+let j = 0;
+do
+PRINT canvas base (i,j);
+if i < 62 then let i = i + 2; else let i = 0;let j = j + 2;
+while (j < 64);
+
+OUTFILE canvas;
